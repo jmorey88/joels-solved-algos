@@ -1008,3 +1008,53 @@ def contains_duplicate(nums)
         end
     }
 end
+
+# 520. Detect Capital
+# Easy
+# Topics
+# Companies
+# We define the usage of capitals in a word to be right when one of the following cases holds:
+
+# All letters in this word are capitals, like "USA".
+# All letters in this word are not capitals, like "leetcode".
+# Only the first letter in this word is capital, like "Google".
+# Given a string word, return true if the usage of capitals in it is right.
+
+ 
+
+# Example 1:
+
+# Input: word = "USA"
+# Output: true
+# Example 2:
+
+# Input: word = "FlaG"
+# Output: false
+ 
+
+# Constraints:
+
+# 1 <= word.length <= 100
+# word consists of lowercase and uppercase English letters.
+
+def detect_capital_use(word)
+    cap_count = 0
+    wrd_ary = word.split("")
+    wrd_ary.each { |char|
+        if char === char.upcase
+            cap_count += 1
+        end
+    }
+    puts "wrd_ary: #{wrd_ary}"
+    puts "cap_count: #{cap_count}"
+    puts "ap_count = wrd_ary.length: #{ap_count = wrd_ary.length}"
+    puts "wrd_ary[0] === wrd_ary[0].upcase: #{wrd_ary[0] === wrd_ary[0].upcase}"
+    if (cap_count == 0) || 
+        (wrd_ary[0] === wrd_ary[0].upcase && cap_count == wrd_ary.length) ||
+        (wrd_ary[0] === wrd_ary[0].upcase && cap_count == 1)
+        return true
+    else
+        return false
+    end
+
+end
