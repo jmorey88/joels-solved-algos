@@ -1058,3 +1058,56 @@ def detect_capital_use(word)
     end
 
 end
+
+# 796. Rotate String
+# Easy
+# Topics
+# Companies
+# Given two strings s and goal, return true if and only if s can become goal after some number of shifts on s.
+
+# A shift on s consists of moving the leftmost character of s to the rightmost position.
+
+# For example, if s = "abcde", then it will be "bcdea" after one shift.
+ 
+
+# Example 1:
+
+# Input: s = "abcde", goal = "cdeab"
+# Output: true
+# Example 2:
+
+# Input: s = "abcde", goal = "abced"
+# Output: false
+ 
+
+# Constraints:
+
+# 1 <= s.length, goal.length <= 100
+# s and goal consist of lowercase English letters.
+
+# solution 1
+
+def rotate_string(s, goal)
+    str_to_a = s.split('')
+    puts "str_to_a #{str_to_a}"
+    puts "str_to_a.join #{str_to_a.join("")}"
+    puts "str_to_a.to_s #{str_to_a.to_s}"
+    index = 0
+    until str_to_a.join("") == goal || index > str_to_a.length
+        str_to_a.push(str_to_a[0])
+        str_to_a.shift()
+        index += 1
+    end
+    if index > str_to_a.length
+        return false
+    elsif str_to_a.join("") == goal
+        return true
+    end
+end
+
+# solution 2
+
+def rotate_string(s, goal)
+  return false if s.length != goal.length # Early exit if lengths are different
+  return (s + s).include?(goal)
+end
