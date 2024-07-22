@@ -1279,3 +1279,78 @@ def climb_stairs(n)
   # The answer is in ways[n]
   ways[n]
 end
+
+# 3151. Special Array I
+# Easy
+# Topics
+# Companies
+# Hint
+# An array is considered special if every pair of its adjacent elements contains two numbers with different parity.
+
+# You are given an array of integers nums. Return true if nums is a special array, otherwise, return false.
+
+# Example 1:
+
+# Input: nums = [1]
+
+# Output: true
+
+# Explanation:
+
+# There is only one element. So the answer is true.
+
+# Example 2:
+
+# Input: nums = [2,1,4]
+
+# Output: true
+
+# Explanation:
+
+# There is only two pairs: (2,1) and (1,4), and both of them contain numbers with different parity. So the answer is true.
+
+# Example 3:
+
+# Input: nums = [4,3,1,6]
+
+# Output: false
+
+# Explanation:
+
+# nums[1] and nums[2] are both odd. So the answer is false.
+
+# Constraints:
+
+# 1 <= nums.length <= 100
+# 1 <= nums[i] <= 100
+
+# solution 1
+
+def is_array_special(nums)
+  return true if nums.length == 1
+
+  char = ''
+  nums.each do |i|
+    if char === ''
+      char = i
+    elsif (char.even? && i.even?) ||
+          (char.odd? && i.odd?)
+      return false
+    else
+      char = i
+    end
+  end
+  true
+end
+
+# solution 1 refactor
+
+def is_array_special(nums)
+  return true if nums.length == 1
+
+  nums.each_cons(2) do |a, b|
+    return false if (a.even? && b.even?) || (a.odd? && b.odd?)
+  end
+
+  true
+end
