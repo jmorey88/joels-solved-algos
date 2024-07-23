@@ -1354,3 +1354,103 @@ def is_array_special(nums)
 
   true
 end
+
+# 3174. Clear Digits
+# Easy
+# Topics
+# Companies
+# Hint
+# You are given a string s.
+
+# Your task is to remove all digits by doing this operation repeatedly:
+
+# Delete the first digit and the closest non-digit character to its left.
+# Return the resulting string after removing all digits.
+
+# Example 1:
+
+# Input: s = "abc"
+
+# Output: "abc"
+
+# Explanation:
+
+# There is no digit in the string.
+
+# Example 2:
+
+# Input: s = "cb34"
+
+# Output: ""
+
+# Explanation:
+
+# First, we apply the operation on s[2], and s becomes "c4".
+
+# Then we apply the operation on s[1], and s becomes "".
+
+# Constraints:
+
+# 1 <= s.length <= 100
+# s consists only of lowercase English letters and digits.
+# The input is generated such that it is possible to delete all digits.
+
+# solution 1
+
+def clear_digits(s)
+  s_ary = s.split('')
+  ary = []
+  index = 0
+  disp_idx = 0
+  s_ary.each do |char|
+    if ('0'..'9').include?(char)
+      puts "char = int?: #{('0'..'9').include?(char)}"
+      ary.push(index)
+    end
+    index += 1
+    puts "index: #{index}"
+  end
+  puts "ary: #{ary}"
+  ary.each do |idx|
+    s_ary.delete_at(idx - disp_idx)
+    s_ary.delete_at(idx - disp_idx - 1)
+    disp_idx += 2
+    puts "s_ary: #{s_ary}"
+  end
+  s_ary.join('')
+end
+
+# solution 1 refactor
+
+def clear_digits(s)
+  s_ary = s.chars
+  digit_indices = []
+
+  s_ary.each_with_index do |char, index|
+    digit_indices << index if char.match?(/[0-9]/)
+  end
+
+  # Delete digits and their left non-digit characters
+  digit_indices.reverse.each do |idx|
+    s_ary.delete_at(idx) # Remove the digit
+    s_ary.delete_at(idx - 1) if idx > 0 # Remove the closest non-digit to its left
+  end
+
+  s_ary.join('')
+end
+
+# slution 2
+
+def clear_digits(s)
+  stack = []
+
+  s.each_char do |char|
+    if char.match?(/[0-9]/)
+      stack.pop if stack.any? # Remove the closest non-digit to its left
+    else
+      stack.push(char) # Add non-digit character to the stack
+    end
+  end
+
+  stack.join('')
+end
