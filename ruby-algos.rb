@@ -1454,3 +1454,60 @@ def clear_digits(s)
 
   stack.join('')
 end
+
+# 20. Valid Parentheses
+# Easy
+# Topics
+# Companies
+# Hint
+# Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+# An input string is valid if:
+
+# Open brackets must be closed by the same type of brackets.
+# Open brackets must be closed in the correct order.
+# Every close bracket has a corresponding open bracket of the same type.
+
+# Example 1:
+
+# Input: s = "()"
+# Output: true
+# Example 2:
+
+# Input: s = "()[]{}"
+# Output: true
+# Example 3:
+
+# Input: s = "(]"
+# Output: false
+
+# Constraints:
+
+# 1 <= s.length <= 104
+# s consists of parentheses only '()[]{}'.
+
+# solution 1
+
+def is_valid(s)
+  # Define a hash to map closing brackets to their corresponding opening brackets
+  bracket_pairs = {
+    ')' => '(',
+    '}' => '{',
+    ']' => '['
+  }
+
+  # Initialize an empty stack
+  stack = []
+
+  # Iterate through each character in the string
+  s.each_char do |char|
+    if bracket_pairs.values.include?(char)  # Check if it's an opening bracket
+      stack.push(char)
+    elsif bracket_pairs.keys.include?(char) # Check if it's a closing bracket
+      return false if stack.empty? || stack.pop != bracket_pairs[char]
+    end
+  end
+
+  # If the stack is empty, all opening brackets have been matched and closed properly
+  stack.empty?
+end
