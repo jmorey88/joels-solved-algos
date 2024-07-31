@@ -1792,3 +1792,157 @@ def letter_combinations(digits)
   backtrack('', digits, combos, answer)
   answer
 end
+
+# 22. Generate Parentheses
+# Medium
+# Topics
+# Companies
+# Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+
+# Example 1:
+
+# Input: n = 3
+# Output: ["((()))","(()())","(())()","()(())","()()()"]
+# Example 2:
+
+# Input: n = 1
+# Output: ["()"]
+
+# Constraints:
+
+# 1 <= n <= 8
+
+# solution 1 recursive
+
+def generate_parenthesis(n)
+  result = []
+
+  def backtrack(result, current, open_count, close_count, max)
+    # Base case: if the current combination is complete
+    if current.length == max * 2
+      result << current
+      return
+    end
+
+    # If we can add an open parenthesis, add it and recurse
+    backtrack(result, current + '(', open_count + 1, close_count, max) if open_count < max
+
+    # If we can add a close parenthesis, add it and recurse
+    return unless close_count < open_count
+
+    backtrack(result, current + ')', open_count, close_count + 1, max)
+  end
+
+  # Start the backtracking process with an empty combination
+  backtrack(result, '', 0, 0, n)
+
+  result
+end
+
+# solution 2 iterative
+
+def generate_parentheses(n)
+  result = []
+  queue = [['', 0, 0]]
+
+  until queue.empty?
+    current, open_count, close_count = queue.shift
+
+    if open_count == n && close_count == n
+      result << current
+    else
+      queue.push([current + '(', open_count + 1, close_count]) if open_count < n
+
+      queue.push([current + ')', open_count, close_count + 1]) if close_count < open_count
+    end
+  end
+
+  result
+end
+
+# 412. Fizz Buzz
+# Easy
+# Topics
+# Companies
+# Given an integer n, return a string array answer (1-indexed) where:
+
+# answer[i] == "FizzBuzz" if i is divisible by 3 and 5.
+# answer[i] == "Fizz" if i is divisible by 3.
+# answer[i] == "Buzz" if i is divisible by 5.
+# answer[i] == i (as a string) if none of the above conditions are true.
+
+# Example 1:
+
+# Input: n = 3
+# Output: ["1","2","Fizz"]
+# Example 2:
+
+# Input: n = 5
+# Output: ["1","2","Fizz","4","Buzz"]
+# Example 3:
+
+# Input: n = 15
+# Output: ["1","2","Fizz","4","Buzz","Fizz","7","8","Fizz","Buzz","11","Fizz","13","14","FizzBuzz"]
+
+# Constraints:
+
+# 1 <= n <= 104
+
+# solution 1
+
+def fizz_buzz(n)
+  # create empty answer array
+  answer = []
+  # iterate through range 1...n
+  for i in 1...n + 1
+    # check if n is divisible by 3, 5, both or none
+    # depending what condition is met, .push the appropriate
+    # integer(as string), or Fizz, Bar or both.
+    if i % 3 == 0 && i % 5 == 0
+      answer.push('FizzBuzz')
+    elsif i % 3 == 0 && i % 5 != 0
+      answer.push('Fizz')
+    elsif i % 5 == 0 && i % 3 != 0
+      answer.push('Buzz')
+    else
+      answer.push("#{i}")
+    end
+  end
+  # return answer
+  answer
+end
+
+# solution 1 refactored
+
+def fizz_buzz(n)
+  # create empty answer array
+  answer = []
+  # iterate through range 1...n
+  for i in 1...n + 1
+    # check if n is divisible by 3, 5, both or none
+    # depending what condition is met, .push the appropriate
+    # integer(as string), or Fizz, Bar or both.
+    if i % 3 == 0 && i % 5 == 0
+      answer.push('FizzBuzz')
+    elsif i % 3 == 0 && i % 5 != 0
+      answer.push('Fizz')
+    elsif i % 5 == 0 && i % 3 != 0
+      answer.push('Buzz')
+    else
+      answer.push("#{i}")
+    end
+  end
+  # return answer
+  answer
+end
+
+# solution 2
+
+def fizz_buzz(n)
+  (1..n).map do |i|
+    result = ''
+    result += 'Fizz' if i % 3 == 0
+    result += 'Buzz' if i % 5 == 0
+    result.empty? ? i.to_s : result
+  end
+end
