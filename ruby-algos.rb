@@ -1946,3 +1946,84 @@ def fizz_buzz(n)
     result.empty? ? i.to_s : result
   end
 end
+
+# 242. Valid Anagram
+# Easy
+# Topics
+# Companies
+# Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+# Example 1:
+
+# Input: s = "anagram", t = "nagaram"
+# Output: true
+# Example 2:
+
+# Input: s = "rat", t = "car"
+# Output: false
+
+# Constraints:
+
+# 1 <= s.length, t.length <= 5 * 104
+# s and t consist of lowercase English letters.
+
+# solution 1
+
+def is_anagram(s, t)
+  s_sorted = s.split('').sort
+  t_sorted = t.split('').sort
+  return true if s_sorted == t_sorted
+
+  false
+end
+
+# solution 1 refactored
+
+def is_anagram(s, t)
+  s.chars.sort == t.chars.sort
+end
+
+# solution 2(not efficient with nested loop)
+
+def is_anagram(s, t)
+  s.each_char do |char1|
+    t.each_char do |char2|
+      if char1 == char2
+        s.delete! char1
+        t.delete! char2
+      end
+    end
+  end
+  return true if s.empty? == true && t.empty? == true
+
+  false
+end
+
+# solution 3
+
+def is_anagram(s, t)
+  return false if s.length != t.length
+
+  s_freq = Hash.new(0)
+  t_freq = Hash.new(0)
+
+  s.each_char { |char| s_freq[char] += 1 }
+  t.each_char { |char| t_freq[char] += 1 }
+
+  s_freq == t_freq
+end
+
+# solution 3 refactored
+
+def is_anagram(s, t)
+  return false if s.length != t.length
+
+  char_count = Hash.new(0)
+
+  s.each_char { |char| char_count[char] += 1 }
+  t.each_char { |char| char_count[char] -= 1 }
+
+  char_count.all? { |_, count| count == 0 }
+end
