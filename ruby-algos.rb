@@ -2072,3 +2072,65 @@ def missing_number(nums)
   actual_sum = nums.sum
   expected_sum - actual_sum
 end
+
+# 485. Max Consecutive Ones
+# Easy
+# Topics
+# Companies
+# Hint
+# Given a binary array nums, return the maximum number of consecutive 1's in the array.
+
+# Example 1:
+
+# Input: nums = [1,1,0,1,1,1]
+# Output: 3
+# Explanation: The first two digits or the last three digits are consecutive 1s. The maximum number of consecutive 1s is 3.
+# Example 2:
+
+# Input: nums = [1,0,1,1,0,1]
+# Output: 2
+
+# Constraints:
+
+# 1 <= nums.length <= 105
+# nums[i] is either 0 or 1.
+
+# solution 1
+
+def find_max_consecutive_ones(nums)
+  answer = 0
+  counter = 0
+  nums.each do |i|
+    if i == 1
+      counter += 1
+      answer = counter if counter > answer
+    else
+      counter = 0
+    end
+  end
+  answer
+end
+
+# solution 1 refactor
+
+def find_max_consecutive_ones(nums)
+  max_count = 0
+  current_count = 0
+
+  nums.each do |num|
+    if num == 1
+      current_count += 1
+      max_count = [max_count, current_count].max
+    else
+      current_count = 0
+    end
+  end
+
+  max_count
+end
+
+# solution 2
+
+def find_max_consecutive_ones(nums)
+  nums.join.split('0').map(&:length).max
+end
