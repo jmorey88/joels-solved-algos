@@ -2134,3 +2134,128 @@ end
 def find_max_consecutive_ones(nums)
   nums.join.split('0').map(&:length).max
 end
+
+# 500. Keyboard Row
+# Easy
+# Topics
+# Companies
+# Given an array of strings words, return the words that can be typed using letters of the alphabet on only one row of American keyboard like the image below.
+
+# In the American keyboard:
+
+# the first row consists of the characters "qwertyuiop",
+# the second row consists of the characters "asdfghjkl", and
+# the third row consists of the characters "zxcvbnm".
+
+# Example 1:
+
+# Input: words = ["Hello","Alaska","Dad","Peace"]
+# Output: ["Alaska","Dad"]
+# Example 2:
+
+# Input: words = ["omk"]
+# Output: []
+# Example 3:
+
+# Input: words = ["adsdf","sfd"]
+# Output: ["adsdf","sfd"]
+
+# Constraints:
+
+# 1 <= words.length <= 20
+# 1 <= words[i].length <= 100
+# words[i] consists of English letters (both lowercase and uppercase).
+
+# solution 1
+
+def find_words(words)
+  row1 = 'qwertyuiop'
+  row2 = 'asdfghjkl'
+  row3 = 'zxcvbnm'
+
+  answer = []
+
+  words.each do |word|
+    wrd_row = 0
+    char_row = 0
+    valid = true
+
+    word.each_char do |char|
+      char = char.downcase # To handle case insensitivity
+
+      if wrd_row == 0 && row1.include?(char)
+        wrd_row = 1
+        char_row = 1
+      elsif wrd_row == 0 && row2.include?(char)
+        wrd_row = 2
+        char_row = 2
+      elsif wrd_row == 0 && row3.include?(char)
+        wrd_row = 3
+        char_row = 3
+      elsif wrd_row > 0 && row1.include?(char)
+        char_row = 1
+      elsif wrd_row > 0 && row2.include?(char)
+        char_row = 2
+      elsif wrd_row > 0 && row3.include?(char)
+        char_row = 3
+      end
+
+      if wrd_row != char_row
+        valid = false
+        break
+      end
+    end
+
+    answer.push(word) if valid
+  end
+
+  answer
+end
+
+# solution 2
+
+def find_words(words)
+  row1 = Set.new('qwertyuiop')
+  row2 = Set.new('asdfghjkl')
+  row3 = Set.new('zxcvbnm')
+
+  answer = []
+
+  words.each do |word|
+    downcased_word = word.downcase
+    first_char = downcased_word[0]
+
+    target_row = if row1.include?(first_char)
+                   row1
+                 elsif row2.include?(first_char)
+                   row2
+                 else
+                   row3
+                 end
+
+    answer.push(word) if downcased_word.chars.all? { |char| target_row.include?(char) }
+  end
+
+  answer
+end
+
+# solution 3
+
+def find_words(words)
+  rows = {
+    'q' => 1, 'w' => 1, 'e' => 1, 'r' => 1, 't' => 1, 'y' => 1, 'u' => 1, 'i' => 1, 'o' => 1, 'p' => 1,
+    'a' => 2, 's' => 2, 'd' => 2, 'f' => 2, 'g' => 2, 'h' => 2, 'j' => 2, 'k' => 2, 'l' => 2,
+    'z' => 3, 'x' => 3, 'c' => 3, 'v' => 3, 'b' => 3, 'n' => 3, 'm' => 3
+  }
+
+  answer = []
+
+  words.each do |word|
+    downcased_word = word.downcase
+    first_row = rows[downcased_word[0]]
+
+    answer.push(word) if downcased_word.chars.all? { |char| rows[char] == first_row }
+  end
+
+  answer
+end
