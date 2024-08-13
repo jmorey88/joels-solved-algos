@@ -2310,7 +2310,28 @@ def word_pattern(pattern, s)
   true
 end
 
-# solution 1 fixed
+# solution 1 fixed with one hash
+
+def word_pattern(pattern, s)
+  pattern = pattern.split('')
+  s = s.split(' ')
+
+  return false if pattern.length != s.length
+
+  tracker = {}
+
+  pattern.each_with_index do |char, i|
+    if !tracker.include?(char) && !tracker.value?(s[i])
+      tracker[char] = s[i]
+    elsif tracker.include?(char) && tracker[char] != s[i]
+      return false
+    end
+  end
+
+  true
+end
+
+# solution 1 fixed with 2 hashes
 
 def word_pattern(pattern, s)
   pattern = pattern.split('')
@@ -2328,4 +2349,47 @@ def word_pattern(pattern, s)
     end
   end
   true
+end
+
+# 392. Is Subsequence
+# Easy
+# Topics
+# Companies
+# Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+
+# A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+
+# Example 1:
+
+# Input: s = "abc", t = "ahbgdc"
+# Output: true
+# Example 2:
+
+# Input: s = "axc", t = "ahbgdc"
+# Output: false
+
+# Constraints:
+
+# 0 <= s.length <= 100
+# 0 <= t.length <= 104
+# s and t consist only of lowercase English letters.
+
+# solution 1 inefficient
+
+def is_subsequence(s, t)
+  t.chars do |char|
+    t.delete! char unless s.include?(char)
+  end
+  s == t
+end
+
+# solution 2
+
+def is_subsequence(s, t)
+  s_index = 0
+  t.each_char do |char|
+    s_index += 1 if char == s[s_index]
+    return true if s_index == s.length
+  end
+  s_index == s.length
 end
