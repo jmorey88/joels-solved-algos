@@ -2393,3 +2393,60 @@ def is_subsequence(s, t)
   end
   s_index == s.length
 end
+
+# 383. Ransom Note
+# Easy
+# Topics
+# Companies
+# Given two strings ransomNote and magazine, return true if ransomNote can be constructed by using the letters from magazine and false otherwise.
+
+# Each letter in magazine can only be used once in ransomNote.
+
+# Example 1:
+
+# Input: ransomNote = "a", magazine = "b"
+# Output: false
+# Example 2:
+
+# Input: ransomNote = "aa", magazine = "ab"
+# Output: false
+# Example 3:
+
+# Input: ransomNote = "aa", magazine = "aab"
+# Output: true
+
+# Constraints:
+
+# 1 <= ransomNote.length, magazine.length <= 105
+# ransomNote and magazine consist of lowercase English letters.
+
+# solution 1
+
+def can_construct(ransom_note, magazine)
+  ransom_note.chars do |letter|
+    return false unless magazine.include?(letter)
+
+    magazine.sub!(letter, '')
+  end
+  true
+end
+
+# solution 2
+
+def can_construct(ransom_note, magazine)
+  magazine_counts = Hash.new(0)
+
+  # Count frequency of each character in magazine
+  magazine.chars.each do |char|
+    magazine_counts[char] += 1
+  end
+
+  # Check if ransom_note can be constructed
+  ransom_note.chars.each do |char|
+    return false if magazine_counts[char] == 0
+
+    magazine_counts[char] -= 1
+  end
+
+  true
+end
