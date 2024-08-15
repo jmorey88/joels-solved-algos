@@ -2450,3 +2450,64 @@ def can_construct(ransom_note, magazine)
 
   true
 end
+
+# 345. Reverse Vowels of a String
+# Easy
+# Topics
+# Companies
+# Given a string s, reverse only all the vowels in the string and return it.
+
+# The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
+
+# Example 1:
+
+# Input: s = "hello"
+# Output: "holle"
+# Example 2:
+
+# Input: s = "leetcode"
+# Output: "leotcede"
+
+# Constraints:
+
+# 1 <= s.length <= 3 * 105
+# s consist of printable ASCII characters.
+
+# solution 1
+
+def reverse_vowels(s)
+  vowels = 'aeiou'
+  vwl_ary = []
+  s.chars do |letter|
+    if vowels.include?(letter)
+      vwl_ary.push(letter)
+      s.sub!(letter, '!')
+    end
+  end
+  vwl_ary.reverse.each do |letter|
+    s.sub!('!', letter)
+  end
+  s
+end
+
+# solution 2
+
+def reverse_vowels(s)
+  vowels = 'aeiouAEIOU'
+  left = 0
+  right = s.length - 1
+  s_chars = s.chars
+
+  while left < right
+    left += 1 while left < right && !vowels.include?(s_chars[left])
+    right -= 1 while left < right && !vowels.include?(s_chars[right])
+
+    next unless left < right
+
+    s_chars[left], s_chars[right] = s_chars[right], s_chars[left]
+    left += 1
+    right -= 1
+  end
+
+  s_chars.join
+end
