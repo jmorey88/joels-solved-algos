@@ -2511,3 +2511,71 @@ def reverse_vowels(s)
 
   s_chars.join
 end
+
+# 461. Hamming Distance
+# Easy
+# Topics
+# Companies
+# The Hamming distance between two integers is the number of positions at which the corresponding bits are different.
+
+# Given two integers x and y, return the Hamming distance between them.
+
+# Example 1:
+
+# Input: x = 1, y = 4
+# Output: 2
+# Explanation:
+# 1   (0 0 0 1)
+# 4   (0 1 0 0)
+#        ↑   ↑
+# The above arrows point to positions where the corresponding bits are different.
+# Example 2:
+
+# Input: x = 3, y = 1
+# Output: 1
+
+# Constraints:
+
+# 0 <= x, y <= 231 - 1
+
+# solution 1
+def hamming_distance(x, y)
+  # Convert both numbers to binary strings
+  bin_x = x.to_s(2)
+  bin_y = y.to_s(2)
+
+  # Find the lengths of the binary strings
+  len_x = bin_x.length
+  len_y = bin_y.length
+
+  # Manually pad the shorter string with leading zeros
+  if len_x < len_y
+    bin_x = '0' * (len_y - len_x) + bin_x
+  elsif len_y < len_x
+    bin_y = '0' * (len_x - len_y) + bin_y
+  end
+
+  # Compare each bit and count the differences
+  distance = 0
+  (0...[len_x, len_y].max).each do |i|
+    distance += 1 if bin_x[i] != bin_y[i]
+  end
+
+  distance
+end
+
+# Example usage
+puts hamming_distance(1, 4) # Output should be 2
+puts hamming_distance(3, 1) # Output should be 1
+
+# soltuion 2 using XOR
+
+def hamming_distance(x, y)
+  # XOR the two numbers. XOR results in a binary number where each bit is 1
+  # if the corresponding bits of x and y are different, and 0 if they are the same.
+  xor_result = x ^ y
+
+  # Convert the XOR result to binary and count the number of '1's,
+  # which indicates the differing bit positions.
+  xor_result.to_s(2).count('1')
+end
