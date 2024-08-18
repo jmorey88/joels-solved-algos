@@ -2579,3 +2579,95 @@ def hamming_distance(x, y)
   # which indicates the differing bit positions.
   xor_result.to_s(2).count('1')
 end
+
+# 258. Add Digits
+# Easy
+# Topics
+# Companies
+# Hint
+# Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
+
+# Example 1:
+
+# Input: num = 38
+# Output: 2
+# Explanation: The process is
+# 38 --> 3 + 8 --> 11
+# 11 --> 1 + 1 --> 2
+# Since 2 has only one digit, return it.
+# Example 2:
+
+# Input: num = 0
+# Output: 0
+
+# Constraints:
+
+# 0 <= num <= 231 - 1
+
+# solution 1
+
+def add_digits(num)
+  while num >= 10 # Continue until the number is a single digit
+    sum = 0
+
+    # Split the number into digits and sum them
+    num.to_s.each_char do |digit|
+      sum += digit.to_i
+    end
+
+    # Set num to the new sum
+    num = sum
+  end
+
+  num
+end
+
+# 231. Power of Two
+# Easy
+# Topics
+# Companies
+# Given an integer n, return true if it is a power of two. Otherwise, return false.
+
+# An integer n is a power of two, if there exists an integer x such that n == 2x.
+
+# Example 1:
+
+# Input: n = 1
+# Output: true
+# Explanation: 20 = 1
+# Example 2:
+
+# Input: n = 16
+# Output: true
+# Explanation: 24 = 16
+# Example 3:
+
+# Input: n = 3
+# Output: false
+
+# solution 1
+
+def is_power_of_two(n)
+  return true if n == 1
+
+  n /= 2 until n.odd? || n == 2
+
+  if n.odd?
+    false
+  elsif n == 2
+    true
+  end
+end
+
+# solution 2 refactor
+
+def is_power_of_two(n)
+  # Edge case: if n is less than or equal to 0, it cannot be a power of two.
+  return false if n <= 0
+
+  # Keep dividing n by 2 as long as it's even and greater than 1.
+  n /= 2 while n > 1 && n.even?
+
+  # If n is reduced to 1, it was a power of two.
+  n == 1
+end
