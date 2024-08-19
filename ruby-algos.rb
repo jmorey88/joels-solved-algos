@@ -2671,3 +2671,151 @@ def is_power_of_two(n)
   # If n is reduced to 1, it was a power of two.
   n == 1
 end
+
+# 278. First Bad Version
+# Easy
+# Topics
+# Companies
+# You are a product manager and currently leading a team to develop a new product. Unfortunately, the latest version of your product fails the quality check. Since each version is developed based on the previous version, all the versions after a bad version are also bad.
+
+# Suppose you have n versions [1, 2, ..., n] and you want to find out the first bad one, which causes all the following ones to be bad.
+
+# You are given an API bool isBadVersion(version) which returns whether version is bad. Implement a function to find the first bad version. You should minimize the number of calls to the API.
+
+# Example 1:
+
+# Input: n = 5, bad = 4
+# Output: 4
+# Explanation:
+# call isBadVersion(3) -> false
+# call isBadVersion(5) -> true
+# call isBadVersion(4) -> true
+# Then 4 is the first bad version.
+# Example 2:
+
+# Input: n = 1, bad = 1
+# Output: 1
+
+# Constraints:
+
+# 1 <= bad <= n <= 231 - 1
+
+# solution 1
+
+def first_bad_version(n)
+  left = 1
+  right = n
+
+  while left < right
+    mid = left + (right - left) / 2
+
+    if is_bad_version(mid)
+      right = mid # The first bad version is at mid or before it
+    else
+      left = mid + 1 # The first bad version is after mid
+    end
+  end
+
+  left # Left will point to the first bad version
+end
+
+# 228. Summary Ranges
+# Easy
+# Topics
+# Companies
+# You are given a sorted unique integer array nums.
+
+# A range [a,b] is the set of all integers from a to b (inclusive).
+
+# Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
+
+# Each range [a,b] in the list should be output as:
+
+# "a->b" if a != b
+# "a" if a == b
+
+# Example 1:
+
+# Input: nums = [0,1,2,4,5,7]
+# Output: ["0->2","4->5","7"]
+# Explanation: The ranges are:
+# [0,2] --> "0->2"
+# [4,5] --> "4->5"
+# [7,7] --> "7"
+# Example 2:
+
+# Input: nums = [0,2,3,4,6,8,9]
+# Output: ["0","2->4","6","8->9"]
+# Explanation: The ranges are:
+# [0,0] --> "0"
+# [2,4] --> "2->4"
+# [6,6] --> "6"
+# [8,9] --> "8->9"
+
+# Constraints:
+
+# 0 <= nums.length <= 20
+# -231 <= nums[i] <= 231 - 1
+# All the values of nums are unique.
+# nums is sorted in ascending order.
+
+# solution 1
+
+def summary_ranges(nums)
+  answer = []
+  range = []
+  nums.each_with_index do |num, i|
+    if range.length <= 0 && num + 1 == nums[i + 1]
+      range.push(num)
+    elsif range.length <= 0 && num + 1 != nums[i + 1]
+      range.push(num)
+      answer.push(range.join(''))
+      range = []
+    elsif num + 1 != nums[i + 1]
+      range.push(num)
+      answer.push(range.join('->'))
+      range = []
+    end
+  end
+  answer
+end
+
+# solution 1 refactored
+
+def summary_ranges(nums)
+  answer = []
+  start = 0
+
+  nums.each_with_index do |num, i|
+    # If the next number is not consecutive or we've reached the end
+    next unless i == nums.length - 1 || nums[i + 1] != num + 1
+
+    if start == i
+      answer.push("#{nums[start]}")
+    else
+      answer.push("#{nums[start]}->#{num}")
+    end
+    start = i + 1
+  end
+
+  answer
+end
+
+# solution 2
+
+def summary_ranges(nums)
+  return [] if nums.empty?
+
+  start = nums.first
+  answer = []
+
+  nums.each_cons(2) do |a, b|
+    if b != a + 1
+      answer << (start == a ? "#{start}" : "#{start}->#{a}")
+      start = b
+    end
+  end
+
+  answer << (start == nums.last ? "#{start}" : "#{start}->#{nums.last}")
+  answer
+end
