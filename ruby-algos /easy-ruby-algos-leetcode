@@ -836,28 +836,32 @@ end
 
 # solution 1
 
-(a.to_i(2) + b.to_i(2)).to_s(2)
+def add_binary(a, b)
+  (a.to_i(2) + b.to_i(2)).to_s(2)
+end
 
 # solution 2 
 
-result = []
-  carry = 0
+def add_binary(a, b)  
+  result = []
+    carry = 0
 
-  max_length = [a.length, b.length].max
-  a = a.rjust(max_length, '0')
-  b = b.rjust(max_length, '0')
+    max_length = [a.length, b.length].max
+    a = a.rjust(max_length, '0')
+    b = b.rjust(max_length, '0')
 
-  (max_length - 1).downto(0) do |i|
-    bit_a = a[i].to_i
-    bit_b = b[i].to_i
+    (max_length - 1).downto(0) do |i|
+      bit_a = a[i].to_i
+      bit_b = b[i].to_i
 
-    sum = bit_a + bit_b + carry
-    carry = sum / 2
-    result.unshift(sum % 2)
-  end
+      sum = bit_a + bit_b + carry
+      carry = sum / 2
+      result.unshift(sum % 2)
+    end
 
-  result.unshift(carry) if carry == 1
-  result.join
+    result.unshift(carry) if carry == 1
+    result.join
+end
 
 # 69. Sqrt(x)
 # Easy
@@ -939,6 +943,111 @@ def my_sqrt(x)
   guess.to_i
 end
 
+# 70. Climbing Stairs
+# Easy
+# Topics
+# Companies
+# Hint
+# You are climbing a staircase. It takes n steps to reach the top.
+
+# Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
+
+# Example 1:
+
+# Input: n = 2
+# Output: 2
+# Explanation: There are two ways to climb to the top.
+# 1. 1 step + 1 step
+# 2. 2 steps
+# Example 2:
+
+# Input: n = 3
+# Output: 3
+# Explanation: There are three ways to climb to the top.
+# 1. 1 step + 1 step + 1 step
+# 2. 1 step + 2 steps
+# 3. 2 steps + 1 step
+
+# Constraints:
+
+1 <= n && n
+
+# solution
+
+def climb_stairs(n)
+  return 1 if n == 1
+  return 2 if n == 2
+
+  # Initialize base cases
+  ways = Array.new(n + 1)
+  ways[1] = 1
+  ways[2] = 2
+
+  # Fill the array using the recurrence relation
+  (3..n).each do |i|
+    ways[i] = ways[i - 1] + ways[i - 2]
+  end
+
+  # The answer is in ways[n]
+  ways[n]
+end
+
+# 83. Remove Duplicates from Sorted List
+# Easy
+# Topics
+# Companies
+# Given the head of a sorted linked list, delete all duplicates such that each element appears only once. Return the linked list sorted as well.
+
+ 
+
+# Example 1:
+
+
+# Input: head = [1,1,2]
+# Output: [1,2]
+# Example 2:
+
+
+# Input: head = [1,1,2,3,3]
+# Output: [1,2,3]
+ 
+
+# Constraints:
+
+# The number of nodes in the list is in the range [0, 300].
+# -100 <= Node.val <= 100
+# The list is guaranteed to be sorted in ascending order.
+
+# solution 1
+
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @return {ListNode}
+def delete_duplicates(head)
+  return head if head.nil? # If the list is empty, return it as is.
+
+    current = head
+
+    while current && current.next
+        if current.val == current.next.val
+            # Skip the next node by pointing current.next to current.next.next
+            current.next = current.next.next
+        else
+            # Move to the next node if no duplicates
+            current = current.next
+        end
+    end
+
+    return head
+end
+
 # 88. Merge Sorted Array
 # Easy
 # Topics
@@ -982,6 +1091,203 @@ def merge(nums1, _m, nums2, _n)
   nums2.each { |i| nums1.push(i) }
   nums1.delete_if { |char| char == 0 }
   nums1.sort!
+end
+
+# 94. Binary Tree Inorder Traversal
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, return the inorder traversal of its nodes' values.
+
+ 
+
+# Example 1:
+
+
+# Input: root = [1,null,2,3]
+# Output: [1,3,2]
+# Example 2:
+
+# Input: root = []
+# Output: []
+# Example 3:
+
+# Input: root = [1]
+# Output: [1]
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 100].
+# -100 <= Node.val <= 100
+
+# solution 1 recursive 
+
+def inorder_traversal(root)
+  inorder_list = []
+  traverse(root, inorder_list)
+  inorder_list
+end
+
+def traverse(node, inorder_list)
+  return if node.nil?
+
+  traverse(node.left, inorder_list)    # Traverse the left subtree
+  inorder_list << node.val             # Visit the current node
+  traverse(node.right, inorder_list)   # Traverse the right subtree
+end
+
+# solution 2 iterative 
+
+def inorder_traversal(root)
+  inorder_list = []
+  stack = []
+  current = root
+
+  while current || !stack.empty?
+    while current
+      stack.push(current)   # Push the current node to the stack
+      current = current.left  # Move to the left child
+    end
+
+    current = stack.pop  # Pop the node from the stack
+    inorder_list << current.val  # Visit the node
+    current = current.right  # Move to the right child
+  end
+
+  inorder_list
+end
+
+# solution 3 Morris traversal
+
+def inorder_traversal(root)
+  inorder_list = []
+  current = root
+
+  while current
+    if current.left.nil?
+      inorder_list << current.val
+      current = current.right
+    else
+      predecessor = current.left
+      while predecessor.right && predecessor.right != current
+        predecessor = predecessor.right
+      end
+
+      if predecessor.right.nil?
+        predecessor.right = current
+        current = current.left
+      else
+        predecessor.right = nil
+        inorder_list << current.val
+        current = current.right
+      end
+    end
+  end
+
+  inorder_list
+end
+
+# 100. Same Tree
+# Easy
+# Topics
+# Companies
+# Given the roots of two binary trees p and q, write a function to check if they are the same or not.
+
+# Two binary trees are considered the same if they are structurally identical, and the nodes have the same value.
+
+ 
+
+# Example 1:
+
+
+# Input: p = [1,2,3], q = [1,2,3]
+# Output: true
+# Example 2:
+
+
+# Input: p = [1,2], q = [1,null,2]
+# Output: false
+# Example 3:
+
+
+# Input: p = [1,2,1], q = [1,1,2]
+# Output: false
+ 
+
+# Constraints:
+
+# The number of nodes in both trees is in the range [0, 100].
+# -104 <= Node.val <= 104
+
+# solution 1 (has some issues, inorder lists can have different shapes)
+
+def is_same_tree(p, q)
+  inorder_list_p = []
+  inorder_list_q = []
+  traverse(p, inorder_list_p)
+  traverse(q, inorder_list_q)
+  inorder_list_p == inorder_list_q
+end
+
+def traverse(node, inorder_list)
+  return if node.nil?
+
+  traverse(node.left, inorder_list)    # Traverse the left subtree
+  inorder_list << node.val             # Visit the current node
+  traverse(node.right, inorder_list)   # Traverse the right subtree
+end
+
+# solution 2 (recursice without finding inorder lists)
+
+def is_same_tree(p, q)
+  # If both nodes are nil, they are the same
+  return true if p.nil? && q.nil?
+
+  # If one is nil and the other is not, they are not the same
+  return false if p.nil? || q.nil?
+
+  # If the values of the nodes differ, they are not the same
+  return false if p.val != q.val
+
+  # Recursively check the left and right subtrees
+  is_same_tree(p.left, q.left) && is_same_tree(p.right, q.right)
+end
+
+# solution 3 iterative
+
+def is_same_tree(p, q)
+  stack_p = []
+  stack_q = []
+  
+  while !stack_p.empty? || p || !stack_q.empty? || q
+    while p
+      stack_p.push(p)
+      p = p.left
+    end
+    
+    while q
+      stack_q.push(q)
+      q = q.left
+    end
+    
+    # Pop the last nodes from the stacks
+    p = stack_p.pop
+    q = stack_q.pop
+    
+    # If one is nil and the other isn't, trees aren't the same
+    return false if p.nil? != q.nil?
+    
+    # If the node values differ, trees aren't the same
+    return false if p.val != q.val
+    
+    # Move to the right child
+    p = p.right
+    q = q.right
+  end
+  
+  # If both stacks are empty, trees are the same
+  return stack_p.empty? && stack_q.empty?
 end
 
 # 217. Contains Duplicate
@@ -1111,55 +1417,6 @@ def rotate_string(s, goal)
   return false if s.length != goal.length # Early exit if lengths are different
 
   (s + s).include?(goal)
-end
-
-# 70. Climbing Stairs
-# Easy
-# Topics
-# Companies
-# Hint
-# You are climbing a staircase. It takes n steps to reach the top.
-
-# Each time you can either climb 1 or 2 steps. In how many distinct ways can you climb to the top?
-
-# Example 1:
-
-# Input: n = 2
-# Output: 2
-# Explanation: There are two ways to climb to the top.
-# 1. 1 step + 1 step
-# 2. 2 steps
-# Example 2:
-
-# Input: n = 3
-# Output: 3
-# Explanation: There are three ways to climb to the top.
-# 1. 1 step + 1 step + 1 step
-# 2. 1 step + 2 steps
-# 3. 2 steps + 1 step
-
-# Constraints:
-
-1 <= n && n
-
-# solution
-
-def climb_stairs(n)
-  return 1 if n == 1
-  return 2 if n == 2
-
-  # Initialize base cases
-  ways = Array.new(n + 1)
-  ways[1] = 1
-  ways[2] = 2
-
-  # Fill the array using the recurrence relation
-  (3..n).each do |i|
-    ways[i] = ways[i - 1] + ways[i - 2]
-  end
-
-  # The answer is in ways[n]
-  ways[n]
 end
 
 # 3151. Special Array I
