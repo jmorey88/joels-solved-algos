@@ -1290,6 +1290,162 @@ def is_same_tree(p, q)
   return stack_p.empty? && stack_q.empty?
 end
 
+# 101. Symmetric Tree
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, check whether it is a mirror of itself (i.e., symmetric around its center).
+
+ 
+
+# Example 1:
+
+
+# Input: root = [1,2,2,3,4,4,3]
+# Output: true
+# Example 2:
+
+
+# Input: root = [1,2,2,null,3,null,3]
+# Output: false
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [1, 1000].
+# -100 <= Node.val <= 100
+
+# solution 1 (recursive)
+
+def is_symmetric(root)
+  return true if root.nil?
+  is_mirror(root.left, root.right)
+end
+
+def is_mirror(left, right)
+  # If both subtrees are empty, they are mirrors of each other
+  return true if left.nil? && right.nil?
+
+  # If only one of the subtrees is empty, they are not mirrors
+  return false if left.nil? || right.nil?
+
+  # The current nodes must have the same value and their subtrees must be mirrors
+  left.val == right.val &&
+  is_mirror(left.left, right.right) &&
+  is_mirror(left.right, right.left)
+end
+
+# solution 2 (iterative)
+
+def is_symmetric(root)
+  return true if root.nil?
+
+  # Initialize a queue to hold pairs of nodes to be compared
+  queue = []
+  queue.push([root.left, root.right])
+
+  while !queue.empty?
+    left, right = queue.shift
+
+    # If both nodes are nil, continue to the next pair
+    next if left.nil? && right.nil?
+
+    # If one of the nodes is nil or their values don't match, the tree is not symmetric
+    return false if left.nil? || right.nil? || left.val != right.val
+
+    # Add the children of the nodes to the queue in opposite order
+    queue.push([left.left, right.right])
+    queue.push([left.right, right.left])
+  end
+
+  # If all nodes have been successfully compared, the tree is symmetric
+  return true
+end
+
+# 104. Maximum Depth of Binary Tree
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, return its maximum depth.
+
+# A binary tree's maximum depth is the number of nodes along the longest path from the root node down to the farthest leaf node.
+
+ 
+
+# Example 1:
+
+
+# Input: root = [3,9,20,null,null,15,7]
+# Output: 3
+# Example 2:
+
+# Input: root = [1,null,2]
+# Output: 2
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 104].
+# -100 <= Node.val <= 100
+
+# solution 1 recursive
+
+def max_depth(root)
+  return 0 if root.nil?  # If the tree is empty, the depth is 0
+
+  # Recursively find the depth of the left and right subtrees
+  left_depth = max_depth(root.left)
+  right_depth = max_depth(root.right)
+
+  # The depth of the tree rooted at this node is the greater of the two depths plus one
+  return [left_depth, right_depth].max + 1
+end
+
+# solution 2 iterative breadth first
+
+def max_depth(root)
+  return 0 if root.nil?  # If the tree is empty, the depth is 0
+
+  queue = [root]  # Initialize the queue with the root
+  depth = 0
+
+  while !queue.empty?
+    depth += 1  # Increment depth at each level
+    level_size = queue.size  # Number of nodes at the current level
+
+    # Process all nodes at the current level
+    level_size.times do
+      node = queue.shift  # Dequeue the front node
+      # Enqueue the children of the current node
+      queue.push(node.left) if node.left
+      queue.push(node.right) if node.right
+    end
+  end
+
+  return depth
+end
+
+# solution 3 iterative depth first
+
+def max_depth(root)
+  return 0 if root.nil?  # If the tree is empty, the depth is 0
+
+  stack = [[root, 1]]  # Stack holds pairs of (node, current_depth)
+  max_depth = 0
+
+  until stack.empty?
+    node, current_depth = stack.pop  # Pop the top node and its depth
+    max_depth = [max_depth, current_depth].max  # Update the max depth
+
+    # Push the children onto the stack with their corresponding depths
+    stack.push([node.left, current_depth + 1]) if node.left
+    stack.push([node.right, current_depth + 1]) if node.right
+  end
+
+  return max_depth
+end
+
+
 # 217. Contains Duplicate
 # Easy
 # Topics
