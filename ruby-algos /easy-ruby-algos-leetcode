@@ -1445,6 +1445,452 @@ def max_depth(root)
   return max_depth
 end
 
+# 108. Convert Sorted Array to Binary Search Tree
+# Easy
+# Topics
+# Companies
+# Given an integer array nums where the elements are sorted in ascending order, convert it to a 
+# height-balanced
+#  binary search tree.
+
+ 
+
+# Example 1:
+
+
+# Input: nums = [-10,-3,0,5,9]
+# Output: [0,-3,9,-10,null,5]
+# Explanation: [0,-10,5,null,-3,null,9] is also accepted:
+
+# Example 2:
+
+
+# Input: nums = [1,3]
+# Output: [3,1]
+# Explanation: [1,null,3] and [3,1] are both height-balanced BSTs.
+ 
+
+# Constraints:
+
+# 1 <= nums.length <= 104
+# -104 <= nums[i] <= 104
+# nums is sorted in a strictly increasing order.
+
+# soltuion 1
+
+def sorted_array_to_bst(nums)
+  return nil if nums.empty?  # Base case: if the array is empty, return nil
+
+  mid = nums.length / 2  # Find the middle index of the array
+
+  # Create a new node with the middle element as the root
+  root = TreeNode.new(nums[mid])
+
+  # Recursively build the left and right subtrees
+  root.left = sorted_array_to_bst(nums[0...mid])  # Left half of the array
+  root.right = sorted_array_to_bst(nums[mid+1..-1])  # Right half of the array
+
+  return root  # Return the root of the BST
+end
+
+# 110. Balanced Binary Tree
+# Easy
+# Topics
+# Companies
+# Given a binary tree, determine if it is 
+# height-balanced
+# .
+
+ 
+
+# Example 1:
+
+
+# Input: root = [3,9,20,null,null,15,7]
+# Output: true
+# Example 2:
+
+
+# Input: root = [1,2,2,3,3,null,null,4,4]
+# Output: false
+# Example 3:
+
+# Input: root = []
+# Output: true
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 5000].
+# -104 <= Node.val <= 104
+
+# solution 1
+
+# Definition for a binary tree node.
+class TreeNode
+  attr_accessor :val, :left, :right
+  def initialize(val = 0, left = nil, right = nil)
+    @val = val
+    @left = left
+    @right = right
+  end
+end
+
+# @param {TreeNode} root
+# @return {Boolean}
+def is_balanced(root)
+  # Helper function to check balance and calculate height
+  def check_balance_and_height(node)
+    return [true, 0] if node.nil?  # An empty node is balanced with height 0
+
+    # Recursively check the left and right subtrees
+    left_balanced, left_height = check_balance_and_height(node.left)
+    right_balanced, right_height = check_balance_and_height(node.right)
+
+    # A tree is balanced if:
+    # 1. The left subtree is balanced
+    # 2. The right subtree is balanced
+    # 3. The difference in heights between the left and right subtrees is at most 1
+    balanced = left_balanced && right_balanced && (left_height - right_height).abs <= 1
+
+    # The height of the current node is 1 plus the maximum height of its subtrees
+    height = 1 + [left_height, right_height].max
+
+    return [balanced, height]
+  end
+
+  # Start the recursive check from the root
+  balanced, _ = check_balance_and_height(root)
+  return balanced
+end
+
+# 111. Minimum Depth of Binary Tree
+# Easy
+# Topics
+# Companies
+# Given a binary tree, find its minimum depth.
+
+# The minimum depth is the number of nodes along the shortest path from the root node down to the nearest leaf node.
+
+# Note: A leaf is a node with no children.
+
+ 
+
+# Example 1:
+
+
+# Input: root = [3,9,20,null,null,15,7]
+# Output: 2
+# Example 2:
+
+# Input: root = [2,null,3,null,4,null,5,null,6]
+# Output: 5
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 105].
+# -1000 <= Node.val <= 1000
+
+# solution 1
+
+def min_depth(root)
+  return 0 if root.nil?
+  
+  # If left child is nil, find the depth of the right subtree
+  if root.left.nil?
+    return 1 + min_depth(root.right)
+  end
+  
+  # If right child is nil, find the depth of the left subtree
+  if root.right.nil?
+    return 1 + min_depth(root.left)
+  end
+  
+  # If both children exist, find the minimum depth between the two subtrees
+  return 1 + [min_depth(root.left), min_depth(root.right)].min
+end
+
+# 112. Path Sum
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree and an integer targetSum, return true if the tree has a root-to-leaf path such that adding up all the values along the path equals targetSum.
+
+# A leaf is a node with no children.
+
+ 
+
+# Example 1:
+
+
+# Input: root = [5,4,8,11,null,13,4,7,2,null,null,null,1], targetSum = 22
+# Output: true
+# Explanation: The root-to-leaf path with the target sum is shown.
+# Example 2:
+
+
+# Input: root = [1,2,3], targetSum = 5
+# Output: false
+# Explanation: There two root-to-leaf paths in the tree:
+# (1 --> 2): The sum is 3.
+# (1 --> 3): The sum is 4.
+# There is no root-to-leaf path with sum = 5.
+# Example 3:
+
+# Input: root = [], targetSum = 0
+# Output: false
+# Explanation: Since the tree is empty, there are no root-to-leaf paths.
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 5000].
+# -1000 <= Node.val <= 1000
+# -1000 <= targetSum <= 1000
+
+# solution 1
+
+def has_path_sum(root, target_sum)
+  return false if root.nil?
+
+  # If it's a leaf node, check if the remaining target_sum equals the leaf node's value
+  if root.left.nil? && root.right.nil?
+    return target_sum == root.val
+  end
+
+  # Recursively check the left and right subtree with the updated target_sum
+  remaining_sum = target_sum - root.val
+  return has_path_sum(root.left, remaining_sum) || has_path_sum(root.right, remaining_sum)
+end
+
+# 118. Pascal's Triangle
+# Easy
+# Topics
+# Companies
+# Given an integer numRows, return the first numRows of Pascal's triangle.
+
+# In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+
+
+ 
+
+# Example 1:
+
+# Input: numRows = 5
+# Output: [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+# Example 2:
+
+# Input: numRows = 1
+# Output: [[1]]
+ 
+
+# Constraints:
+
+# 1 <= numRows <= 30
+
+# solution 1
+
+def generate(num_rows)
+    return [] if num_rows == 0 
+    return [[1]] if num_rows == 1 
+    return [[1],[1,1]] if num_rows == 2 
+    answer = [[1],[1,1]]
+    if num_rows > 2
+        prev_row = answer[answer.length - 1]
+        (num_rows - 2).times do |i|
+            current_row = [1]
+            prev_row.each_cons(2) do |a, b|
+                current_row.push(a + b)
+            end
+            current_row.push(1)
+            answer.push(current_row)
+            prev_row = current_row
+        end
+        return answer
+    end
+end
+
+# solution 1 refactored 
+
+def generate(num_rows)
+  return [] if num_rows == 0
+  answer = [[1]]
+  
+  (num_rows - 1).times do
+    prev_row = answer.last
+    current_row = [1]
+    
+    (0...prev_row.length - 1).each do |i|
+      current_row << prev_row[i] + prev_row[i + 1]
+    end
+    
+    current_row << 1
+    answer << current_row
+  end
+  
+  answer
+end
+
+# solution 2
+
+def generate(num_rows)
+  answer = []
+  
+  num_rows.times do |i|
+    row = Array.new(i + 1, 1)
+    
+    (1...i).each do |j|
+      row[j] = answer[i - 1][j - 1] + answer[i - 1][j]
+    end
+    
+    answer << row
+  end
+  
+  answer
+end
+
+# 119. Pascal's Triangle II
+# Easy
+# Topics
+# Companies
+# Given an integer rowIndex, return the rowIndexth (0-indexed) row of the Pascal's triangle.
+
+# In Pascal's triangle, each number is the sum of the two numbers directly above it as shown:
+
+
+ 
+
+# Example 1:
+
+# Input: rowIndex = 3
+# Output: [1,3,3,1]
+# Example 2:
+
+# Input: rowIndex = 0
+# Output: [1]
+# Example 3:
+
+# Input: rowIndex = 1
+# Output: [1,1]
+ 
+
+# Constraints:
+
+# 0 <= rowIndex <= 33
+
+# solution 1
+
+def get_row(row_index)
+  answer = [[1]]
+  
+  row_index.times do
+    prev_row = answer.last
+    current_row = [1]
+    
+    (0...prev_row.length - 1).each do |i|
+      current_row << prev_row[i] + prev_row[i + 1]
+    end
+    
+    current_row << 1
+    answer << current_row
+  end
+
+  answer.last
+end
+
+# solution 2
+
+def get_row(row_index)
+  row = [1] * (row_index + 1)
+  
+  (1...row_index).each do |i|
+    (i).downto(1) do |j|
+      row[j] += row[j - 1]
+    end
+  end
+  
+  row
+end
+
+# 121. Best Time to Buy and Sell Stock
+# Easy
+# Topics
+# Companies
+# You are given an array prices where prices[i] is the price of a given stock on the ith day.
+
+# You want to maximize your profit by choosing a single day to buy one stock and choosing a different day in the future to sell that stock.
+
+# Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return 0.
+
+ 
+
+# Example 1:
+
+# Input: prices = [7,1,5,3,6,4]
+# Output: 5
+# Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+# Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
+# Example 2:
+
+# Input: prices = [7,6,4,3,1]
+# Output: 0
+# Explanation: In this case, no transactions are done and the max profit = 0.
+ 
+
+# Constraints:
+
+# 1 <= prices.length <= 105
+# 0 <= prices[i] <= 104
+
+# solution 1
+
+def max_profit(prices)
+    max_profit = 0
+    prices.each_with_index do |buy, i|
+        (i + 1..prices.length - 1).each do |j|
+            if prices[j] - buy > max_profit
+                max_profit = prices[j] - buy
+            end
+        end
+    end
+    return max_profit
+end
+
+# solution 1 refactored 
+
+def max_profit(prices)
+  max_profit = 0
+
+  prices.each_with_index do |buy, i|
+    ((i + 1)...prices.length).each do |j|
+      profit = prices[j] - buy
+      max_profit = profit if profit > max_profit
+    end
+  end
+
+  max_profit
+end
+
+# solution 2
+
+def max_profit(prices)
+  min_price = Float::INFINITY
+  max_profit = 0
+
+  prices.each do |price|
+    # Update min_price to the lowest price encountered so far
+    min_price = [min_price, price].min
+
+    # Calculate the potential profit
+    profit = price - min_price
+
+    # Update max_profit to the highest profit found so far
+    max_profit = [max_profit, profit].max
+  end
+
+  max_profit
+end
 
 # 217. Contains Duplicate
 # Easy
