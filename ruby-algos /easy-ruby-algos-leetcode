@@ -1892,6 +1892,219 @@ def max_profit(prices)
   max_profit
 end
 
+# 125. Valid Palindrome
+# Easy
+# Topics
+# Companies
+# A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward. Alphanumeric characters include letters and numbers.
+
+# Given a string s, return true if it is a palindrome, or false otherwise.
+
+ 
+
+# Example 1:
+
+# Input: s = "A man, a plan, a canal: Panama"
+# Output: true
+# Explanation: "amanaplanacanalpanama" is a palindrome.
+# Example 2:
+
+# Input: s = "race a car"
+# Output: false
+# Explanation: "raceacar" is not a palindrome.
+# Example 3:
+
+# Input: s = " "
+# Output: true
+# Explanation: s is an empty string "" after removing non-alphanumeric characters.
+# Since an empty string reads the same forward and backward, it is a palindrome.
+ 
+
+# Constraints:
+
+# 1 <= s.length <= 2 * 105
+# s consists only of printable ASCII characters.
+
+# solution 1
+
+def is_palindrome(s)
+    s_dwn = s.downcase
+    s_dwn.each_char do |char|
+        if !("a"..."z").include?(char) && !(0...9).include?(char)
+            puts char
+            puts ("a"..."z").include?(char)
+            puts (9...0).include?(char)
+
+            s_dwn.delete!(char)
+            puts s_dwn
+        end
+    end
+        puts s_dwn
+        puts s_dwn.reverse
+        s_dwn == s_dwn.reverse
+end
+
+# solution 2
+
+def is_palindrome(s)
+  # Remove non-alphanumeric characters and convert to lowercase
+  s = s.downcase.gsub(/[^a-z0-9]/, '')
+  # Check if the string is the same forwards and backwards
+  s == s.reverse
+end
+
+# solution 3
+
+def is_palindrome(s)
+  left, right = 0, s.length - 1
+
+  while left < right
+    # Increment left pointer if current character is not alphanumeric
+    left += 1 while left < right && !s[left].match?(/[a-zA-Z0-9]/)
+    # Decrement right pointer if current character is not alphanumeric
+    right -= 1 while left < right && !s[right].match?(/[a-zA-Z0-9]/)
+
+    # Compare the characters after converting to lowercase
+    return false if s[left].downcase != s[right].downcase
+
+    # Move pointers closer
+    left += 1
+    right -= 1
+  end
+
+  true
+end
+
+# 136. Single Number
+# Easy
+# Topics
+# Companies
+# Hint
+# Given a non-empty array of integers nums, every element appears twice except for one. Find that single one.
+
+# You must implement a solution with a linear runtime complexity and use only constant extra space.
+
+ 
+
+# Example 1:
+
+# Input: nums = [2,2,1]
+# Output: 1
+# Example 2:
+
+# Input: nums = [4,1,2,1,2]
+# Output: 4
+# Example 3:
+
+# Input: nums = [1]
+# Output: 1
+ 
+
+# Constraints:
+
+# 1 <= nums.length <= 3 * 104
+# -3 * 104 <= nums[i] <= 3 * 104
+# Each element in the array appears twice except for one element which appears only once.
+
+# solution 1
+
+def single_number(nums)
+    xor_result = nums[0]
+    (1...nums.length).each do |i|
+        xor_result ^= nums[i]
+    end
+    xor_result
+end
+
+# solution 2
+
+def single_number(nums)
+    unique_sum = nums.uniq.sum
+    total_sum = nums.sum
+    single_number = 2 * unique_sum - total_sum
+    single_number
+end
+
+# 141. Linked List Cycle
+# Easy
+# Topics
+# Companies
+# Given head, the head of a linked list, determine if the linked list has a cycle in it.
+
+# There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+
+# Return true if there is a cycle in the linked list. Otherwise, return false.
+
+ 
+
+# Example 1:
+
+
+# Input: head = [3,2,0,-4], pos = 1
+# Output: true
+# Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+# Example 2:
+
+
+# Input: head = [1,2], pos = 0
+# Output: true
+# Explanation: There is a cycle in the linked list, where the tail connects to the 0th node.
+# Example 3:
+
+
+# Input: head = [1], pos = -1
+# Output: false
+# Explanation: There is no cycle in the linked list.
+ 
+
+# Constraints:
+
+# The number of the nodes in the list is in the range [0, 104].
+# -105 <= Node.val <= 105
+# pos is -1 or a valid index in the linked-list.
+
+# solution 1
+
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val)
+#         @val = val
+#         @next = nil
+#     end
+# end
+
+# @param {ListNode} head
+# @return {Boolean}
+def hasCycle(head)
+    arr = []
+    list = head
+    while list != nil
+        return true if arr.include?(list)
+        arr.push(list)
+        list = list.next
+    end
+    return false
+end
+
+# soltuion 2 Floyd's cycle/ toroise and hare
+
+def hasCycle(head)
+    slow = head
+    fast = head
+    
+    while fast != nil && fast.next != nil
+        slow = slow.next
+        fast = fast.next.next
+        
+        if slow == fast
+            return true
+        end
+    end
+    
+    return false
+end
+
 # 217. Contains Duplicate
 # Easy
 # Topics
