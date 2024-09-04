@@ -2105,6 +2105,423 @@ def hasCycle(head)
     return false
 end
 
+# 144. Binary Tree Preorder Traversal
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, return the preorder traversal of its nodes' values.
+
+ 
+
+# Example 1:
+
+# Input: root = [1,null,2,3]
+
+# Output: [1,2,3]
+
+# Explanation:
+
+
+
+# Example 2:
+
+# Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
+
+# Output: [1,2,4,5,6,7,3,8,9]
+
+# Explanation:
+
+
+
+# Example 3:
+
+# Input: root = []
+
+# Output: []
+
+# Example 4:
+
+# Input: root = [1]
+
+# Output: [1]
+
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [0, 100].
+# -100 <= Node.val <= 100
+
+# solution 1 recursive
+
+def preorder_traversal(root)
+    answer = []
+    move(root, answer)
+    answer
+end
+    
+def move(current, answer)
+    return if current.nil?
+
+    answer << current.val
+    move(current.left, answer)
+    move(current.right, answer)
+end
+
+# solution 2 iterative 
+
+def preorder_traversal(root)
+    return [] if root.nil?
+
+    answer = []
+    stack = [root]
+
+    until stack.empty?
+        node = stack.pop
+        answer << node.val
+        stack.push(node.right) if node.right
+        stack.push(node.left) if node.left
+    end
+
+    answer
+end
+
+# 145. Binary Tree Postorder Traversal
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, return the postorder traversal of its nodes' values.
+
+ 
+
+# Example 1:
+
+# Input: root = [1,null,2,3]
+
+# Output: [3,2,1]
+
+# Explanation:
+
+
+
+# Example 2:
+
+# Input: root = [1,2,3,4,5,null,8,null,null,6,7,9]
+
+# Output: [4,6,7,5,2,9,8,3,1]
+
+# Explanation:
+
+
+
+# Example 3:
+
+# Input: root = []
+
+# Output: []
+
+# Example 4:
+
+# Input: root = [1]
+
+# Output: [1]
+
+ 
+
+# Constraints:
+
+# The number of the nodes in the tree is in the range [0, 100].
+# -100 <= Node.val <= 100
+
+# soltuion 1 recursive
+
+def postorder_traversal(root)
+    answer = []
+    move(root, answer)
+    answer
+end
+
+def move(current, answer)
+    return if current.nil?
+
+    move(current.left, answer)
+    move(current.right, answer)
+    answer << current.val
+end
+
+# solution 2 iterative two stack
+
+def postorder_traversal(root)
+  return [] if root.nil?
+
+  stack1 = []
+  stack2 = []
+  stack1.push(root)
+
+  while !stack1.empty?
+    node = stack1.pop
+    stack2.push(node)
+
+    # Push left and right children to stack1
+    stack1.push(node.left) if node.left
+    stack1.push(node.right) if node.right
+  end
+
+  # The nodes in stack2 are in reverse postorder
+  result = []
+  while !stack2.empty?
+    result.push(stack2.pop.val)
+  end
+
+  result
+end
+
+# solutino 3 iterative one stack
+
+def postorder_traversal(root)
+  return [] if root.nil?
+
+  stack = []
+  result = []
+  current = root
+  last_visited = nil
+
+  while !stack.empty? || current
+    if current
+      stack.push(current)
+      current = current.left
+    else
+      peek_node = stack.last
+      if peek_node.right && last_visited != peek_node.right
+        current = peek_node.right
+      else
+        result.push(peek_node.val)
+        last_visited = stack.pop
+      end
+    end
+  end
+
+  result
+end
+
+# 160. Intersection of Two Linked Lists
+# Easy
+# Topics
+# Companies
+# Given the heads of two singly linked-lists headA and headB, return the node at which the two lists intersect. If the two linked lists have no intersection at all, return null.
+
+# For example, the following two linked lists begin to intersect at node c1:
+
+
+# The test cases are generated such that there are no cycles anywhere in the entire linked structure.
+
+# Note that the linked lists must retain their original structure after the function returns.
+
+# Custom Judge:
+
+# The inputs to the judge are given as follows (your program is not given these inputs):
+
+# intersectVal - The value of the node where the intersection occurs. This is 0 if there is no intersected node.
+# listA - The first linked list.
+# listB - The second linked list.
+# skipA - The number of nodes to skip ahead in listA (starting from the head) to get to the intersected node.
+# skipB - The number of nodes to skip ahead in listB (starting from the head) to get to the intersected node.
+# The judge will then create the linked structure based on these inputs and pass the two heads, headA and headB to your program. If you correctly return the intersected node, then your solution will be accepted.
+
+ 
+
+# Example 1:
+
+
+# Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,6,1,8,4,5], skipA = 2, skipB = 3
+# Output: Intersected at '8'
+# Explanation: The intersected node's value is 8 (note that this must not be 0 if the two lists intersect).
+# From the head of A, it reads as [4,1,8,4,5]. From the head of B, it reads as [5,6,1,8,4,5]. There are 2 nodes before the intersected node in A; There are 3 nodes before the intersected node in B.
+# - Note that the intersected node's value is not 1 because the nodes with value 1 in A and B (2nd node in A and 3rd node in B) are different node references. In other words, they point to two different locations in memory, while the nodes with value 8 in A and B (3rd node in A and 4th node in B) point to the same location in memory.
+# Example 2:
+
+
+# Input: intersectVal = 2, listA = [1,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
+# Output: Intersected at '2'
+# Explanation: The intersected node's value is 2 (note that this must not be 0 if the two lists intersect).
+# From the head of A, it reads as [1,9,1,2,4]. From the head of B, it reads as [3,2,4]. There are 3 nodes before the intersected node in A; There are 1 node before the intersected node in B.
+# Example 3:
+
+
+# Input: intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
+# Output: No intersection
+# Explanation: From the head of A, it reads as [2,6,4]. From the head of B, it reads as [1,5]. Since the two lists do not intersect, intersectVal must be 0, while skipA and skipB can be arbitrary values.
+# Explanation: The two lists do not intersect, so return null.
+ 
+
+# Constraints:
+
+# The number of nodes of listA is in the m.
+# The number of nodes of listB is in the n.
+# 1 <= m, n <= 3 * 104
+# 1 <= Node.val <= 105
+# 0 <= skipA < m
+# 0 <= skipB < n
+# intersectVal is 0 if listA and listB do not intersect.
+# intersectVal == listA[skipA] == listB[skipB] if listA and listB intersect.
+
+# solution 1
+
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val)
+#         @val = val
+#         @next = nil
+#     end
+# end
+
+# @param {ListNode} headA
+# @param {ListNode} headB
+# @return {ListNode}
+def getIntersectionNode(headA, headB)
+    ptrA = headA
+    ptrB = headB
+
+    while ptrA != ptrB
+        ptrA = ptrA.nil? ? headB : ptrA.next
+        ptrB = ptrB.nil? ? headA : ptrB.next
+    end
+
+    ptrA
+end
+
+# 168. Excel Sheet Column Title
+# Easy
+# Topics
+# Companies
+# Given an integer columnNumber, return its corresponding column title as it appears in an Excel sheet.
+
+# For example:
+
+# A -> 1
+# B -> 2
+# C -> 3
+# ...
+# Z -> 26
+# AA -> 27
+# AB -> 28 
+# ...
+ 
+
+# Example 1:
+
+# Input: columnNumber = 1
+# Output: "A"
+# Example 2:
+
+# Input: columnNumber = 28
+# Output: "AB"
+# Example 3:
+
+# Input: columnNumber = 701
+# Output: "ZY"
+ 
+
+# Constraints:
+
+# 1 <= columnNumber <= 231 - 1
+
+# solution 1
+
+def convert_to_title(column_number)
+    alpha_map = Hash.new
+    alpha = ("A".."Z")
+    counter = 1
+    alpha.each do |letter|
+        alpha_map[counter] = letter
+        counter += 1
+    end
+
+    if column_number < 27 
+        return alpha_map[column_number]
+    else
+        left_over = column_number % 26
+        base = column_number - left_over
+        first_letter = base / 26
+        return "#{alpha_map[first_letter]}" + "#{alpha_map[left_over]}"
+    end
+
+end
+
+# solution 2
+
+def convert_to_title(column_number)
+   title = ""
+
+  while column_number > 0
+    column_number -= 1
+    remainder = column_number % 26
+    title = (65 + remainder).chr + title
+    column_number /= 26
+  end
+
+  title
+end
+
+# 169. Majority Element
+# Easy
+# Topics
+# Companies
+# Given an array nums of size n, return the majority element.
+
+# The majority element is the element that appears more than ⌊n / 2⌋ times. You may assume that the majority element always exists in the array.
+
+ 
+
+# Example 1:
+
+# Input: nums = [3,2,3]
+# Output: 3
+# Example 2:
+
+# Input: nums = [2,2,1,1,1,2,2]
+# Output: 2
+ 
+
+# Constraints:
+
+# n == nums.length
+# 1 <= n <= 5 * 104
+# -109 <= nums[i] <= 109
+
+# solution 1
+
+def majority_element(nums)
+    counter = Hash.new
+    length = nums.length
+    nums.each do |num|
+        if counter[num].nil?
+            counter[num] = 1
+        else
+            counter[num] += 1
+        end
+    end
+    return counter.max_by{|k,v| v}[0]
+end
+
+# solution 2 Boyer Moore Voting Algorithm
+
+def majority_element(nums)
+    candidate = nil
+    count = 0
+
+    nums.each do |num|
+        if count == 0
+            candidate = num
+        end
+        count += (num == candidate) ? 1 : -1
+    end
+
+    candidate
+end
+
+
 # 217. Contains Duplicate
 # Easy
 # Topics
