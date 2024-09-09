@@ -2427,7 +2427,7 @@ end
 
 # 1 <= columnNumber <= 231 - 1
 
-# solution 1
+# solution 1 using hash map (has issues)
 
 def convert_to_title(column_number)
     alpha_map = Hash.new
@@ -2449,7 +2449,7 @@ def convert_to_title(column_number)
 
 end
 
-# solution 2
+# solution 2 using ASCII
 
 def convert_to_title(column_number)
    title = ""
@@ -2521,6 +2521,669 @@ def majority_element(nums)
     candidate
 end
 
+# 171. Excel Sheet Column Number
+# Easy
+# Topics
+# Companies
+# Given a string columnTitle that represents the column title as appears in an Excel sheet, return its corresponding column number.
+
+# For example:
+
+# A -> 1
+# B -> 2
+# C -> 3
+# ...
+# Z -> 26
+# AA -> 27
+# AB -> 28 
+# ...
+ 
+
+# Example 1:
+
+# Input: columnTitle = "A"
+# Output: 1
+# Example 2:
+
+# Input: columnTitle = "AB"
+# Output: 28
+# Example 3:
+
+# Input: columnTitle = "ZY"
+# Output: 701
+ 
+
+# Constraints:
+
+# 1 <= columnTitle.length <= 7
+# columnTitle consists only of uppercase English letters.
+# columnTitle is in the range ["A", "FXSHRXW"].
+
+# solution 1
+
+def title_to_number(column_title)
+    answer = 0
+    index = 1
+    column_title.each_char do |char|
+        if index != column_title.length
+            answer += (char.ord - 64) * 26
+            index += 1
+        else
+            answer += char.ord - 64
+        end
+    end
+    answer
+end
+
+# solution 1 refactored
+
+def title_to_number(column_title)
+    answer = 0
+    column_title.each_char do |char|
+        answer = answer * 26 + (char.ord - 64)
+    end
+    answer
+end
+
+# 190. Reverse Bits
+# Easy
+# Topics
+# Companies
+# Reverse bits of a given 32 bits unsigned integer.
+
+# Note:
+
+# Note that in some languages, such as Java, there is no unsigned integer type. In this case, both input and output will be given as a signed integer type. They should not affect your implementation, as the integer's internal binary representation is the same, whether it is signed or unsigned.
+# In Java, the compiler represents the signed integers using 2's complement notation. Therefore, in Example 2 above, the input represents the signed integer -3 and the output represents the signed integer -1073741825.
+ 
+
+# Example 1:
+
+# Input: n = 00000010100101000001111010011100
+# Output:    964176192 (00111001011110000010100101000000)
+# Explanation: The input binary string 00000010100101000001111010011100 represents the unsigned integer 43261596, so return 964176192 which its binary representation is 00111001011110000010100101000000.
+# Example 2:
+
+# Input: n = 11111111111111111111111111111101
+# Output:   3221225471 (10111111111111111111111111111111)
+# Explanation: The input binary string 11111111111111111111111111111101 represents the unsigned integer 4294967293, so return 3221225471 which its binary representation is 10111111111111111111111111111111.
+ 
+
+# Constraints:
+
+# The input must be a binary string of length 32
+
+# solution 1
+
+def reverse_bits(n)
+  # Convert the number to a 32-bit binary string, padded with leading zeros
+  binary_str = n.to_s(2).rjust(32, '0')
+  
+  # Reverse the binary string
+  reversed_str = binary_str.reverse
+  
+  # Convert the reversed binary string back to an integer
+  reversed_int = reversed_str.to_i(2)
+  
+  return reversed_int
+end
+
+# 191. Number of 1 Bits
+# Attempted
+# Easy
+# Topics
+# Companies
+# Write a function that takes the binary representation of a positive integer and returns the number of 
+# set bits
+#  it has (also known as the Hamming weight).
+
+ 
+
+# Example 1:
+
+# Input: n = 11
+
+# Output: 3
+
+# Explanation:
+
+# The input binary string 1011 has a total of three set bits.
+
+# Example 2:
+
+# Input: n = 128
+
+# Output: 1
+
+# Explanation:
+
+# The input binary string 10000000 has a total of one set bit.
+
+# Example 3:
+
+# Input: n = 2147483645
+
+# Output: 30
+
+# Explanation:
+
+# The input binary string 1111111111111111111111111111101 has a total of thirty set bits.
+
+ 
+
+# Constraints:
+
+# 1 <= n <= 231 - 1
+
+# solution 1
+
+def hamming_weight(n)
+    number = n.to_s(2)
+    counter = 0
+    number.each_char do |i|
+    puts i
+        if i == "1"
+            counter += 1
+        end
+    end
+    return counter
+end
+
+# soltuion 2
+
+def hamming_weight(n)
+  n.to_s(2).count('1')
+end
+
+# 193. Valid Phone Numbers
+# Solved
+# Easy
+# Topics
+# Companies
+# Given a text file file.txt that contains a list of phone numbers (one per line), write a one-liner bash script to print all valid phone numbers.
+
+# You may assume that a valid phone number must appear in one of the following two formats: (xxx) xxx-xxxx or xxx-xxx-xxxx. (x means a digit)
+
+# You may also assume each line in the text file must not contain leading or trailing white spaces.
+
+# Example:
+
+# Assume that file.txt has the following content:
+
+# 987-123-4567
+# 123 456 7890
+# (123) 456-7890
+# Your script should output the following valid phone numbers:
+
+# 987-123-4567
+# (123) 456-7890
+
+# solution 1
+
+grep -E '^(\([0-9]{3}\) [0-9]{3}-[0-9]{4}|[0-9]{3}-[0-9]{3}-[0-9]{4})$' file.txt
+
+# 195. Tenth Line
+# Easy
+# Topics
+# Companies
+# Given a text file file.txt, print just the 10th line of the file.
+
+# Example:
+
+# Assume that file.txt has the following content:
+
+# Line 1
+# Line 2
+# Line 3
+# Line 4
+# Line 5
+# Line 6
+# Line 7
+# Line 8
+# Line 9
+# Line 10
+# Your script should output the tenth line, which is:
+
+# Line 10
+
+# solution 1
+
+sed -n '10p' file.txt
+
+# solution 2
+
+head -n 10 file.txt | tail -n 1
+
+# solution 3
+
+awk 'NR==10' file.txt
+
+# 196. Delete Duplicate Emails
+# Easy
+# Topics
+# Companies
+# SQL Schema
+# Pandas Schema
+# Table: Person
+
+# +-------------+---------+
+# | Column Name | Type    |
+# +-------------+---------+
+# | id          | int     |
+# | email       | varchar |
+# +-------------+---------+
+# id is the primary key (column with unique values) for this table.
+# Each row of this table contains an email. The emails will not contain uppercase letters.
+ 
+
+# Write a solution to delete all duplicate emails, keeping only one unique email with the smallest id.
+
+# For SQL users, please note that you are supposed to write a DELETE statement and not a SELECT one.
+
+# For Pandas users, please note that you are supposed to modify Person in place.
+
+# After running your script, the answer shown is the Person table. The driver will first compile and run your piece of code and then show the Person table. The final order of the Person table does not matter.
+
+# The result format is in the following example.
+
+ 
+
+# Example 1:
+
+# Input: 
+# Person table:
+# +----+------------------+
+# | id | email            |
+# +----+------------------+
+# | 1  | john@example.com |
+# | 2  | bob@example.com  |
+# | 3  | john@example.com |
+# +----+------------------+
+# Output: 
+# +----+------------------+
+# | id | email            |
+# +----+------------------+
+# | 1  | john@example.com |
+# | 2  | bob@example.com  |
+# +----+------------------+
+# Explanation: john@example.com is repeated two times. We keep the row with the smallest Id = 1.
+
+# solution 1 POSTGRESQL
+
+DELETE FROM Person
+WHERE id NOT IN (
+    SELECT MIN(id)
+    FROM Person
+    GROUP BY email
+);
+
+# 197. Rising Temperature
+# Easy
+# Topics
+# Companies
+# SQL Schema
+# Pandas Schema
+# Table: Weather
+
+# +---------------+---------+
+# | Column Name   | Type    |
+# +---------------+---------+
+# | id            | int     |
+# | recordDate    | date    |
+# | temperature   | int     |
+# +---------------+---------+
+# id is the column with unique values for this table.
+# There are no different rows with the same recordDate.
+# This table contains information about the temperature on a certain day.
+ 
+
+# Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
+
+# Return the result table in any order.
+
+# The result format is in the following example.
+
+ 
+
+# Example 1:
+
+# Input: 
+# Weather table:
+# +----+------------+-------------+
+# | id | recordDate | temperature |
+# +----+------------+-------------+
+# | 1  | 2015-01-01 | 10          |
+# | 2  | 2015-01-02 | 25          |
+# | 3  | 2015-01-03 | 20          |
+# | 4  | 2015-01-04 | 30          |
+# +----+------------+-------------+
+# Output: 
+# +----+
+# | id |
+# +----+
+# | 2  |
+# | 4  |
+# +----+
+# Explanation: 
+# In 2015-01-02, the temperature was higher than the previous day (10 -> 25).
+# In 2015-01-04, the temperature was higher than the previous day (20 -> 30).
+
+# solution 1 MYSQL
+
+SELECT w1.id
+FROM Weather w1
+JOIN Weather w2
+ON DATEDIFF(w1.recordDate, w2.recordDate) = 1
+WHERE w1.temperature > w2.temperature;
+
+# 202. Happy Number
+# Easy
+# Topics
+# Companies
+# Write an algorithm to determine if a number n is happy.
+
+# A happy number is a number defined by the following process:
+
+# Starting with any positive integer, replace the number by the sum of the squares of its digits.
+# Repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1.
+# Those numbers for which this process ends in 1 are happy.
+# Return true if n is a happy number, and false if not.
+
+# Example 1:
+
+# Input: n = 19
+# Output: true
+# Explanation:
+# 12 + 92 = 82
+# 82 + 22 = 68
+# 62 + 82 = 100
+# 12 + 02 + 02 = 1
+# Example 2:
+
+# Input: n = 2
+# Output: false
+
+# Constraints:
+
+# 1 <= n <= 231 - 1
+
+def sep_n_sqr(num)
+  next_num = 0
+  puts "num: #{num}"
+  squar_i = num.to_s.split('').each do |i|
+    puts "i: #{i}"
+    const = i.to_i**2
+    puts "const #{const}"
+    next_num += i.to_i**2
+    puts "next_num: #{next_num}"
+  end
+  next_num
+end
+
+def is_happy(n)
+  num_ary = []
+  puts "n: #{n}"
+  nxt_nm = sep_n_sqr(n)
+  until nxt_nm === 1 || num_ary.include?(nxt_nm)
+    num_ary.push(nxt_nm)
+    nxt_nm = sep_n_sqr(nxt_nm)
+    puts "nxt_nm: #{nxt_nm}"
+  end
+  print "num_ary: #{num_ary}"
+  nxt_nm === 1
+end
+
+# 203. Remove Linked List Elements
+# Easy
+# Topics
+# Companies
+# Given the head of a linked list and an integer val, remove all the nodes of the linked list that has Node.val == val, and return the new head.
+
+ 
+
+# Example 1:
+
+
+# Input: head = [1,2,6,3,4,5,6], val = 6
+# Output: [1,2,3,4,5]
+# Example 2:
+
+# Input: head = [], val = 1
+# Output: []
+# Example 3:
+
+# Input: head = [7,7,7,7], val = 7
+# Output: []
+ 
+
+# Constraints:
+
+# The number of nodes in the list is in the range [0, 104].
+# 1 <= Node.val <= 50
+# 0 <= val <= 50
+
+# solution 1
+
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @param {Integer} val
+# @return {ListNode}
+def remove_elements(head, val)
+
+    node = head
+    previous = head
+
+    until node.nil?
+        if head.val == val
+            head = head.next
+        end
+        if node.val == val
+            previous.next = node.next
+        end
+            previous = node
+            node = node.next
+    end
+    head
+end
+
+# solution 1 refactored 
+
+def remove_elements(head, val)
+    # Handle all occurrences of val at the beginning (head)
+    while head && head.val == val
+        head = head.next
+    end
+    
+    # Initialize pointers
+    node = head
+    previous = nil
+    
+    until node.nil?
+        if node.val == val
+            previous.next = node.next if previous # skip the node
+        else
+            previous = node # update previous only if node is kept
+        end
+        node = node.next
+    end
+    
+    head
+end
+
+# solution 2
+
+def remove_elements(head, val)
+    # Create a dummy node that points to head
+    dummy = ListNode.new(0)
+    dummy.next = head
+    
+    # Initialize pointers
+    previous = dummy
+    node = head
+    
+    # Traverse the list
+    until node.nil?
+        if node.val == val
+            previous.next = node.next # remove the node
+        else
+            previous = node # update previous only if node is kept
+        end
+        node = node.next
+    end
+    
+    dummy.next # return the new head
+end
+
+# 205. Isomorphic Strings
+# Easy
+# Topics
+# Companies
+# Given two strings s and t, determine if they are isomorphic.
+
+# Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+# All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+ 
+
+# Example 1:
+
+# Input: s = "egg", t = "add"
+
+# Output: true
+
+# Explanation:
+
+# The strings s and t can be made identical by:
+
+# Mapping 'e' to 'a'.
+# Mapping 'g' to 'd'.
+# Example 2:
+
+# Input: s = "foo", t = "bar"
+
+# Output: false
+
+# Explanation:
+
+# The strings s and t can not be made identical as 'o' needs to be mapped to both 'a' and 'r'.
+
+# Example 3:
+
+# Input: s = "paper", t = "title"
+
+# Output: true
+
+ 
+
+# Constraints:
+
+# 1 <= s.length <= 5 * 104
+# t.length == s.length
+# s and t consist of any valid ascii character.
+
+# solution 1
+
+def is_isomorphic(s, t)
+    return false if s.length != t.length
+    
+    s_to_t = {}
+    t_to_s = {}
+    
+    s.chars.each_with_index do |letter, i|
+        # Current characters from both strings
+        char_s = letter
+        char_t = t[i]
+        
+        # Check if s -> t mapping is valid
+        if s_to_t[char_s].nil?
+            s_to_t[char_s] = char_t
+        elsif s_to_t[char_s] != char_t
+            return false
+        end
+
+        # Check if t -> s mapping is valid (this ensures uniqueness in t as well)
+        if t_to_s[char_t].nil?
+            t_to_s[char_t] = char_s
+        elsif t_to_s[char_t] != char_s
+            return false
+        end
+    end
+    
+    true
+end
+
+# solution 2
+
+def is_isomorphic(s, t)
+    return false if s.length != t.length
+    
+    # Convert each string to a pattern of first occurrence indices
+    def first_occurrence_pattern(str)
+        pattern = []
+        map = {}
+        
+        str.chars.each_with_index do |char, i|
+            map[char] ||= i  # Set the first occurrence index if not already set
+            pattern << map[char]
+        end
+        
+        pattern
+    end
+    
+    first_occurrence_pattern(s) == first_occurrence_pattern(t)
+end
+
+# 206. Reverse Linked List
+# Easy
+# Topics
+# Companies
+# Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+ 
+
+# Example 1:
+
+
+# Input: head = [1,2,3,4,5]
+# Output: [5,4,3,2,1]
+# Example 2:
+
+
+# Input: head = [1,2]
+# Output: [2,1]
+# Example 3:
+
+# Input: head = []
+# Output: []
+ 
+
+# Constraints:
+
+# The number of nodes in the list is the range [0, 5000].
+# -5000 <= Node.val <= 5000
+
+# solution 1
+
+current = head
+    previous = nil
+
+    until current.nil?  # This ensures we traverse the whole list
+        next_node = current.next   # Store the next node
+        current.next = previous    # Reverse the 'next' pointer
+        previous = current         # Move 'previous' to this node
+        current = next_node        # Move 'current' to the next node in the original list
+    end
+
+    # After the loop, 'previous' will point to the new head of the reversed list
+    previous
 
 # 217. Contains Duplicate
 # Easy
