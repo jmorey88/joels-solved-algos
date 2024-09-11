@@ -3567,6 +3567,240 @@ def invert_tree(root)
     root  # Return the root after inversion
 end
 
+# 228. Summary Ranges
+# Easy
+# Topics
+# Companies
+# You are given a sorted unique integer array nums.
+
+# A range [a,b] is the set of all integers from a to b (inclusive).
+
+# Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
+
+# Each range [a,b] in the list should be output as:
+
+# "a->b" if a != b
+# "a" if a == b
+
+# Example 1:
+
+# Input: nums = [0,1,2,4,5,7]
+# Output: ["0->2","4->5","7"]
+# Explanation: The ranges are:
+# [0,2] --> "0->2"
+# [4,5] --> "4->5"
+# [7,7] --> "7"
+# Example 2:
+
+# Input: nums = [0,2,3,4,6,8,9]
+# Output: ["0","2->4","6","8->9"]
+# Explanation: The ranges are:
+# [0,0] --> "0"
+# [2,4] --> "2->4"
+# [6,6] --> "6"
+# [8,9] --> "8->9"
+
+# Constraints:
+
+# 0 <= nums.length <= 20
+# -231 <= nums[i] <= 231 - 1
+# All the values of nums are unique.
+# nums is sorted in ascending order.
+
+# solution 1
+
+def summary_ranges(nums)
+  answer = []
+  range = []
+  nums.each_with_index do |num, i|
+    if range.length <= 0 && num + 1 == nums[i + 1]
+      range.push(num)
+    elsif range.length <= 0 && num + 1 != nums[i + 1]
+      range.push(num)
+      answer.push(range.join(''))
+      range = []
+    elsif num + 1 != nums[i + 1]
+      range.push(num)
+      answer.push(range.join('->'))
+      range = []
+    end
+  end
+  answer
+end
+
+# solution 1 refactored
+
+def summary_ranges(nums)
+  answer = []
+  start = 0
+
+  nums.each_with_index do |num, i|
+    # If the next number is not consecutive or we've reached the end
+    next unless i == nums.length - 1 || nums[i + 1] != num + 1
+
+    if start == i
+      answer.push("#{nums[start]}")
+    else
+      answer.push("#{nums[start]}->#{num}")
+    end
+    start = i + 1
+  end
+
+  answer
+end
+
+# solution 2
+
+def summary_ranges(nums)
+  return [] if nums.empty?
+
+  start = nums.first
+  answer = []
+
+  nums.each_cons(2) do |a, b|
+    if b != a + 1
+      answer << (start == a ? "#{start}" : "#{start}->#{a}")
+      start = b
+    end
+  end
+
+  answer << (start == nums.last ? "#{start}" : "#{start}->#{nums.last}")
+  answer
+end
+
+# 231. Power of Two
+# Easy
+# Topics
+# Companies
+# Given an integer n, return true if it is a power of two. Otherwise, return false.
+
+# An integer n is a power of two, if there exists an integer x such that n == 2x.
+
+# Example 1:
+
+# Input: n = 1
+# Output: true
+# Explanation: 20 = 1
+# Example 2:
+
+# Input: n = 16
+# Output: true
+# Explanation: 24 = 16
+# Example 3:
+
+# Input: n = 3
+# Output: false
+
+# solution 1
+
+def is_power_of_two(n)
+  return true if n == 1
+
+  n /= 2 until n.odd? || n == 2
+
+  if n.odd?
+    false
+  elsif n == 2
+    true
+  end
+end
+
+# solution 2 refactor
+
+def is_power_of_two(n)
+  # Edge case: if n is less than or equal to 0, it cannot be a power of two.
+  return false if n <= 0
+
+  # Keep dividing n by 2 as long as it's even and greater than 1.
+  n /= 2 while n > 1 && n.even?
+
+  # If n is reduced to 1, it was a power of two.
+  n == 1
+end
+
+# 232. Implement Queue using Stacks
+# Easy
+# Topics
+# Companies
+# Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (push, peek, pop, and empty).
+
+# Implement the MyQueue class:
+
+# void push(int x) Pushes element x to the back of the queue.
+# int pop() Removes the element from the front of the queue and returns it.
+# int peek() Returns the element at the front of the queue.
+# boolean empty() Returns true if the queue is empty, false otherwise.
+# Notes:
+
+# You must use only standard operations of a stack, which means only push to top, peek/pop from top, size, and is empty operations are valid.
+# Depending on your language, the stack may not be supported natively. You may simulate a stack using a list or deque (double-ended queue) as long as you use only a stack's standard operations.
+ 
+
+# Example 1:
+
+# Input
+# ["MyQueue", "push", "push", "peek", "pop", "empty"]
+# [[], [1], [2], [], [], []]
+# Output
+# [null, null, null, 1, 1, false]
+
+# Explanation
+# MyQueue myQueue = new MyQueue();
+# myQueue.push(1); // queue is: [1]
+# myQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)
+# myQueue.peek(); // return 1
+# myQueue.pop(); // return 1, queue is [2]
+# myQueue.empty(); // return false
+ 
+
+# Constraints:
+
+# 1 <= x <= 9
+# At most 100 calls will be made to push, pop, peek, and empty.
+# All the calls to pop and peek are valid.
+
+# solution 1
+
+class MyQueue
+    def initialize()
+        @stack1 = []  # The "input" stack
+        @stack2 = []  # The "output" stack
+    end
+
+    # Pushes element to the back of the queue
+    def push(x)
+        @stack1 << x
+    end
+
+    # Removes the element from the front of the queue
+    def pop()
+        if @stack2.empty?
+            transfer_stack1_to_stack2
+        end
+        @stack2.pop
+    end
+
+    # Returns the front element without removing it
+    def peek()
+        if @stack2.empty?
+            transfer_stack1_to_stack2
+        end
+        @stack2[-1]
+    end
+
+    # Returns whether the queue is empty
+    def empty()
+        @stack1.empty? && @stack2.empty?
+    end
+
+    # Helper method to transfer elements from stack1 to stack2
+    def transfer_stack1_to_stack2
+        until @stack1.empty?
+            @stack2 << @stack1.pop
+        end
+    end
+end
+
 
 # 520. Detect Capital
 # Easy
@@ -4601,56 +4835,6 @@ def add_digits(num)
   num
 end
 
-# 231. Power of Two
-# Easy
-# Topics
-# Companies
-# Given an integer n, return true if it is a power of two. Otherwise, return false.
-
-# An integer n is a power of two, if there exists an integer x such that n == 2x.
-
-# Example 1:
-
-# Input: n = 1
-# Output: true
-# Explanation: 20 = 1
-# Example 2:
-
-# Input: n = 16
-# Output: true
-# Explanation: 24 = 16
-# Example 3:
-
-# Input: n = 3
-# Output: false
-
-# solution 1
-
-def is_power_of_two(n)
-  return true if n == 1
-
-  n /= 2 until n.odd? || n == 2
-
-  if n.odd?
-    false
-  elsif n == 2
-    true
-  end
-end
-
-# solution 2 refactor
-
-def is_power_of_two(n)
-  # Edge case: if n is less than or equal to 0, it cannot be a power of two.
-  return false if n <= 0
-
-  # Keep dividing n by 2 as long as it's even and greater than 1.
-  n /= 2 while n > 1 && n.even?
-
-  # If n is reduced to 1, it was a power of two.
-  n == 1
-end
-
 # 278. First Bad Version
 # Easy
 # Topics
@@ -4696,107 +4880,6 @@ def first_bad_version(n)
   end
 
   left # Left will point to the first bad version
-end
-
-# 228. Summary Ranges
-# Easy
-# Topics
-# Companies
-# You are given a sorted unique integer array nums.
-
-# A range [a,b] is the set of all integers from a to b (inclusive).
-
-# Return the smallest sorted list of ranges that cover all the numbers in the array exactly. That is, each element of nums is covered by exactly one of the ranges, and there is no integer x such that x is in one of the ranges but not in nums.
-
-# Each range [a,b] in the list should be output as:
-
-# "a->b" if a != b
-# "a" if a == b
-
-# Example 1:
-
-# Input: nums = [0,1,2,4,5,7]
-# Output: ["0->2","4->5","7"]
-# Explanation: The ranges are:
-# [0,2] --> "0->2"
-# [4,5] --> "4->5"
-# [7,7] --> "7"
-# Example 2:
-
-# Input: nums = [0,2,3,4,6,8,9]
-# Output: ["0","2->4","6","8->9"]
-# Explanation: The ranges are:
-# [0,0] --> "0"
-# [2,4] --> "2->4"
-# [6,6] --> "6"
-# [8,9] --> "8->9"
-
-# Constraints:
-
-# 0 <= nums.length <= 20
-# -231 <= nums[i] <= 231 - 1
-# All the values of nums are unique.
-# nums is sorted in ascending order.
-
-# solution 1
-
-def summary_ranges(nums)
-  answer = []
-  range = []
-  nums.each_with_index do |num, i|
-    if range.length <= 0 && num + 1 == nums[i + 1]
-      range.push(num)
-    elsif range.length <= 0 && num + 1 != nums[i + 1]
-      range.push(num)
-      answer.push(range.join(''))
-      range = []
-    elsif num + 1 != nums[i + 1]
-      range.push(num)
-      answer.push(range.join('->'))
-      range = []
-    end
-  end
-  answer
-end
-
-# solution 1 refactored
-
-def summary_ranges(nums)
-  answer = []
-  start = 0
-
-  nums.each_with_index do |num, i|
-    # If the next number is not consecutive or we've reached the end
-    next unless i == nums.length - 1 || nums[i + 1] != num + 1
-
-    if start == i
-      answer.push("#{nums[start]}")
-    else
-      answer.push("#{nums[start]}->#{num}")
-    end
-    start = i + 1
-  end
-
-  answer
-end
-
-# solution 2
-
-def summary_ranges(nums)
-  return [] if nums.empty?
-
-  start = nums.first
-  answer = []
-
-  nums.each_cons(2) do |a, b|
-    if b != a + 1
-      answer << (start == a ? "#{start}" : "#{start}->#{a}")
-      start = b
-    end
-  end
-
-  answer << (start == nums.last ? "#{start}" : "#{start}->#{nums.last}")
-  answer
 end
 
 # 292. Nim Game
