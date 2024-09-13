@@ -3801,6 +3801,293 @@ class MyQueue
     end
 end
 
+# 234. Palindrome Linked List
+# Easy
+# Topics
+# Companies
+# Given the head of a singly linked list, return true if it is a 
+# palindrome
+#  or false otherwise.
+
+ 
+
+# Example 1:
+
+
+# Input: head = [1,2,2,1]
+# Output: true
+# Example 2:
+
+
+# Input: head = [1,2]
+# Output: false
+ 
+
+# Constraints:
+
+# The number of nodes in the list is in the range [1, 105].
+# 0 <= Node.val <= 9
+
+# solution 1
+
+# Definition for singly-linked list.
+# class ListNode
+#     attr_accessor :val, :next
+#     def initialize(val = 0, _next = nil)
+#         @val = val
+#         @next = _next
+#     end
+# end
+# @param {ListNode} head
+# @return {Boolean}
+def is_palindrome(head)
+    return true if head.nil? || head.next.nil?  # Edge case for empty or single-node list
+
+    # Step 1: Find the middle using the slow and fast pointers
+    single_step = head
+    double_step = head
+
+    while double_step&.next&.next
+        single_step = single_step.next
+        double_step = double_step.next.next
+    end
+
+    # Step 2: Reverse the second half of the list
+    current = single_step.next
+    prev = nil
+
+    while current
+        next_node = current.next
+        current.next = prev
+        prev = current
+        current = next_node
+    end
+
+    # Step 3: Compare the first and second halves
+    first_half = head
+    second_half = prev  # 'prev' is now the head of the reversed second half
+
+    while second_half
+        return false if first_half.val != second_half.val
+        first_half = first_half.next
+        second_half = second_half.next
+    end
+
+    true
+end
+
+# 242. Valid Anagram
+# Easy
+# Topics
+# Companies
+# Given two strings s and t, return true if t is an anagram of s, and false otherwise.
+
+# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
+
+# Example 1:
+
+# Input: s = "anagram", t = "nagaram"
+# Output: true
+# Example 2:
+
+# Input: s = "rat", t = "car"
+# Output: false
+
+# Constraints:
+
+# 1 <= s.length, t.length <= 5 * 104
+# s and t consist of lowercase English letters.
+
+# solution 1
+
+def is_anagram(s, t)
+  s_sorted = s.split('').sort
+  t_sorted = t.split('').sort
+  return true if s_sorted == t_sorted
+
+  false
+end
+
+# solution 1 refactored
+
+def is_anagram(s, t)
+  s.chars.sort == t.chars.sort
+end
+
+# solution 2(not efficient with nested loop)
+
+def is_anagram(s, t)
+  s.each_char do |char1|
+    t.each_char do |char2|
+      if char1 == char2
+        s.delete! char1
+        t.delete! char2
+      end
+    end
+  end
+  return true if s.empty? == true && t.empty? == true
+
+  false
+end
+
+# solution 3
+
+def is_anagram(s, t)
+  return false if s.length != t.length
+
+  s_freq = Hash.new(0)
+  t_freq = Hash.new(0)
+
+  s.each_char { |char| s_freq[char] += 1 }
+  t.each_char { |char| t_freq[char] += 1 }
+
+  s_freq == t_freq
+end
+
+# solution 3 refactored
+
+def is_anagram(s, t)
+  return false if s.length != t.length
+
+  char_count = Hash.new(0)
+
+  s.each_char { |char| char_count[char] += 1 }
+  t.each_char { |char| char_count[char] -= 1 }
+
+  char_count.all? { |_, count| count == 0 }
+end
+
+# 257. Binary Tree Paths
+# Easy
+# Topics
+# Companies
+# Given the root of a binary tree, return all root-to-leaf paths in any order.
+
+# A leaf is a node with no children.
+
+ 
+
+# Example 1:
+
+
+# Input: root = [1,2,3,null,5]
+# Output: ["1->2->5","1->3"]
+# Example 2:
+
+# Input: root = [1]
+# Output: ["1"]
+ 
+
+# Constraints:
+
+# The number of nodes in the tree is in the range [1, 100].
+# -100 <= Node.val <= 100
+
+# solution 1
+
+# Definition for a binary tree node.
+# class TreeNode
+#     attr_accessor :val, :left, :right
+#     def initialize(val = 0, left = nil, right = nil)
+#         @val = val
+#         @left = left
+#         @right = right
+#     end
+# end
+# @param {TreeNode} root
+# @return {String[]}
+def binary_tree_paths(root)
+    answer = []
+    path = ""
+    node = root 
+
+    def traverse(node, path, answer)
+        if path == "" 
+            path += "#{node.val}"
+        else    
+            path += "->#{node.val}"
+        end
+        if node.left.nil? && node.right.nil?
+            answer << path
+        end
+        if node.left
+            traverse(node.left, path, answer)
+        end
+        if node.right
+            traverse(node.right, path, answer)
+        end
+    end
+
+    traverse(node, path, answer)
+
+    answer
+end
+
+# solution 1 refactored
+
+def binary_tree_paths(root)
+    return [] if root.nil?
+    
+    answer = []
+    
+    def traverse(node, path, answer)
+        path << node.val
+        
+        if node.left.nil? && node.right.nil?
+            # Join the path array to form the string when you reach a leaf node
+            answer << path.join('->')
+        else
+            traverse(node.left, path.dup, answer) if node.left
+            traverse(node.right, path.dup, answer) if node.right
+        end
+    end
+
+    traverse(root, [], answer)
+    answer
+end
+
+
+# 258. Add Digits
+# Easy
+# Topics
+# Companies
+# Hint
+# Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
+
+# Example 1:
+
+# Input: num = 38
+# Output: 2
+# Explanation: The process is
+# 38 --> 3 + 8 --> 11
+# 11 --> 1 + 1 --> 2
+# Since 2 has only one digit, return it.
+# Example 2:
+
+# Input: num = 0
+# Output: 0
+
+# Constraints:
+
+# 0 <= num <= 231 - 1
+
+# solution 1
+
+def add_digits(num)
+  while num >= 10 # Continue until the number is a single digit
+    sum = 0
+
+    # Split the number into digits and sum them
+    num.to_s.each_char do |digit|
+      sum += digit.to_i
+    end
+
+    # Set num to the new sum
+    num = sum
+  end
+
+  num
+end
 
 # 520. Detect Capital
 # Easy
@@ -4158,87 +4445,6 @@ def fizz_buzz(n)
     result += 'Buzz' if i % 5 == 0
     result.empty? ? i.to_s : result
   end
-end
-
-# 242. Valid Anagram
-# Easy
-# Topics
-# Companies
-# Given two strings s and t, return true if t is an anagram of s, and false otherwise.
-
-# An Anagram is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.
-
-# Example 1:
-
-# Input: s = "anagram", t = "nagaram"
-# Output: true
-# Example 2:
-
-# Input: s = "rat", t = "car"
-# Output: false
-
-# Constraints:
-
-# 1 <= s.length, t.length <= 5 * 104
-# s and t consist of lowercase English letters.
-
-# solution 1
-
-def is_anagram(s, t)
-  s_sorted = s.split('').sort
-  t_sorted = t.split('').sort
-  return true if s_sorted == t_sorted
-
-  false
-end
-
-# solution 1 refactored
-
-def is_anagram(s, t)
-  s.chars.sort == t.chars.sort
-end
-
-# solution 2(not efficient with nested loop)
-
-def is_anagram(s, t)
-  s.each_char do |char1|
-    t.each_char do |char2|
-      if char1 == char2
-        s.delete! char1
-        t.delete! char2
-      end
-    end
-  end
-  return true if s.empty? == true && t.empty? == true
-
-  false
-end
-
-# solution 3
-
-def is_anagram(s, t)
-  return false if s.length != t.length
-
-  s_freq = Hash.new(0)
-  t_freq = Hash.new(0)
-
-  s.each_char { |char| s_freq[char] += 1 }
-  t.each_char { |char| t_freq[char] += 1 }
-
-  s_freq == t_freq
-end
-
-# solution 3 refactored
-
-def is_anagram(s, t)
-  return false if s.length != t.length
-
-  char_count = Hash.new(0)
-
-  s.each_char { |char| char_count[char] += 1 }
-  t.each_char { |char| char_count[char] -= 1 }
-
-  char_count.all? { |_, count| count == 0 }
 end
 
 # 268. Missing Number
@@ -4791,48 +4997,6 @@ def hamming_distance(x, y)
   # Convert the XOR result to binary and count the number of '1's,
   # which indicates the differing bit positions.
   xor_result.to_s(2).count('1')
-end
-
-# 258. Add Digits
-# Easy
-# Topics
-# Companies
-# Hint
-# Given an integer num, repeatedly add all its digits until the result has only one digit, and return it.
-
-# Example 1:
-
-# Input: num = 38
-# Output: 2
-# Explanation: The process is
-# 38 --> 3 + 8 --> 11
-# 11 --> 1 + 1 --> 2
-# Since 2 has only one digit, return it.
-# Example 2:
-
-# Input: num = 0
-# Output: 0
-
-# Constraints:
-
-# 0 <= num <= 231 - 1
-
-# solution 1
-
-def add_digits(num)
-  while num >= 10 # Continue until the number is a single digit
-    sum = 0
-
-    # Split the number into digits and sum them
-    num.to_s.each_char do |digit|
-      sum += digit.to_i
-    end
-
-    # Set num to the new sum
-    num = sum
-  end
-
-  num
 end
 
 # 278. First Bad Version
