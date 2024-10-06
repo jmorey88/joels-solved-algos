@@ -4552,6 +4552,435 @@ def is_power_of_three(n)
     n == 1  
 end
 
+# solution 2 (cleaner w/o floating number)
+
+def is_power_of_three(n)
+  return false if n <= 0
+  while n % 3 == 0
+    n /= 3
+  end
+  n == 1
+end
+
+# 338. Counting Bits
+# Easy
+# Topics
+# Companies
+# Hint
+# Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
+
+ 
+
+# Example 1:
+
+# Input: n = 2
+# Output: [0,1,1]
+# Explanation:
+# 0 --> 0
+# 1 --> 1
+# 2 --> 10
+# Example 2:
+
+# Input: n = 5
+# Output: [0,1,1,2,1,2]
+# Explanation:
+# 0 --> 0
+# 1 --> 1
+# 2 --> 10
+# 3 --> 11
+# 4 --> 100
+# 5 --> 101
+ 
+
+# Constraints:
+
+# 0 <= n <= 105
+
+# solution 1
+
+def count_bits(n)
+    ans = []
+    
+    (0..n).each do |i|
+        counter = 0
+        num_to_bi = i.to_s(2)
+        num_to_bi.each_char do |j|
+            if j == "1"
+                counter += 1
+            end
+        end
+        ans << counter
+    end
+    
+    ans
+end
+
+# solution 1 refactored 
+
+def count_bits(n)
+    (0..n).map { |i| i.to_s(2).count('1') }
+end
+
+# solution 2
+
+def count_bits(n)
+  ans = [0] * (n + 1)  # Initialize an array of size n+1 to store results
+  
+  (1..n).each do |i|
+    ans[i] = ans[i >> 1] + (i & 1)
+  end
+  
+  ans
+end
+
+# 342. Power of Four
+# Easy
+# Topics
+# Companies
+# Given an integer n, return true if it is a power of four. Otherwise, return false.
+
+# An integer n is a power of four, if there exists an integer x such that n == 4x.
+
+ 
+
+# Example 1:
+
+# Input: n = 16
+# Output: true
+# Example 2:
+
+# Input: n = 5
+# Output: false
+# Example 3:
+
+# Input: n = 1
+# Output: true
+ 
+
+# Constraints:
+
+# -231 <= n <= 231 - 1
+
+# solution 1
+
+def is_power_of_four(n)
+    return false if n <= 0
+
+    n /= 4.0 while n >= 4
+
+    n == 1
+end
+
+# solution 2
+
+def is_power_of_four(n)
+  # Check if n is a positive power of two
+  return false if n <= 0 || (n & (n - 1)) != 0
+  
+  # Check if the only set bit is in the correct position for a power of 4
+  # 0x55555555 is a binary number with bits set at odd positions (i.e., 1010101010101010101010101010101 in binary)
+  (n & 0x55555555) != 0
+end
+
+
+# 344. Reverse String
+# Easy
+# Topics
+# Companies
+# Hint
+# Write a function that reverses a string. The input string is given as an array of characters s.
+
+# You must do this by modifying the input array in-place with O(1) extra memory.
+
+ 
+
+# Example 1:
+
+# Input: s = ["h","e","l","l","o"]
+# Output: ["o","l","l","e","h"]
+# Example 2:
+
+# Input: s = ["H","a","n","n","a","h"]
+# Output: ["h","a","n","n","a","H"]
+ 
+
+# Constraints:
+
+# 1 <= s.length <= 105
+# s[i] is a printable ascii character.
+
+# solution 1
+
+def reverse_string(s)
+    front = 0
+    back = s.length - 1
+
+    until back <= front 
+        s[front], s[back] = s[back], s[front]
+        front += 1
+        back -= 1
+    end
+
+    s 
+end
+
+# 345. Reverse Vowels of a String
+# Easy
+# Topics
+# Companies
+# Given a string s, reverse only all the vowels in the string and return it.
+
+# The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
+
+# Example 1:
+
+# Input: s = "hello"
+# Output: "holle"
+# Example 2:
+
+# Input: s = "leetcode"
+# Output: "leotcede"
+
+# Constraints:
+
+# 1 <= s.length <= 3 * 105
+# s consist of printable ASCII characters.
+
+# solution 1
+
+def reverse_vowels(s)
+  vowels = 'aeiou'
+  vwl_ary = []
+  s.chars do |letter|
+    if vowels.include?(letter)
+      vwl_ary.push(letter)
+      s.sub!(letter, '!')
+    end
+  end
+  vwl_ary.reverse.each do |letter|
+    s.sub!('!', letter)
+  end
+  s
+end
+
+# solution 2
+
+def reverse_vowels(s)
+  vowels = 'aeiouAEIOU'
+  left = 0
+  right = s.length - 1
+  s_chars = s.chars
+
+  while left < right
+    left += 1 while left < right && !vowels.include?(s_chars[left])
+    right -= 1 while left < right && !vowels.include?(s_chars[right])
+
+    next unless left < right
+
+    s_chars[left], s_chars[right] = s_chars[right], s_chars[left]
+    left += 1
+    right -= 1
+  end
+
+  s_chars.join
+end
+
+# 349. Intersection of Two Arrays
+# Easy
+# Topics
+# Companies
+# Given two integer arrays nums1 and nums2, return an array of their 
+# intersection
+# . Each element in the result must be unique and you may return the result in any order.
+
+ 
+
+# Example 1:
+
+# Input: nums1 = [1,2,2,1], nums2 = [2,2]
+# Output: [2]
+# Example 2:
+
+# Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+# Output: [9,4]
+# Explanation: [4,9] is also accepted.
+ 
+
+# Constraints:
+
+# 1 <= nums1.length, nums2.length <= 1000
+# 0 <= nums1[i], nums2[i] <= 1000
+
+# solution 1
+
+def intersection(nums1, nums2)
+    answer = []
+    nums1uni = nums1.uniq
+    nums2uni = nums2.uniq
+
+    nums1uni.each do |i|
+        if nums2uni.include?(i)
+            answer << i
+        end
+    end
+
+    answer
+end
+
+# solution 2 with hash map for more efficiency 
+
+def intersection(nums1, nums2)
+  # Create a hash map to store elements of the first array.
+  element_map = {}
+  nums1.each { |num| element_map[num] = true }
+
+  # Find common elements using the hash map.
+  result = []
+  nums2.each do |num|
+    if element_map[num]
+      result << num
+      element_map.delete(num) # Ensure each element is only added once.
+    end
+  end
+
+  result
+end
+
+# solution 3 with sets 
+
+require 'set'
+
+def intersection(nums1, nums2)
+  # Convert both arrays to sets to remove duplicates and perform intersection.
+  set1 = nums1.to_set
+  set2 = nums2.to_set
+
+  # Return the intersection of both sets as an array.
+  (set1 & set2).to_a
+end
+
+# 350. Intersection of Two Arrays II
+# Easy
+# Topics
+# Companies
+# Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must appear as many times as it shows in both arrays and you may return the result in any order.
+
+ 
+
+# Example 1:
+
+# Input: nums1 = [1,2,2,1], nums2 = [2,2]
+# Output: [2,2]
+# Example 2:
+
+# Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+# Output: [4,9]
+# Explanation: [9,4] is also accepted.
+ 
+
+# Constraints:
+
+# 1 <= nums1.length, nums2.length <= 1000
+# 0 <= nums1[i], nums2[i] <= 1000
+
+# solution 1
+
+def intersect(nums1, nums2)
+    hashmap = {}
+
+    nums1.each { |num| 
+        if hashmap[num]
+            hashmap[num] += 1
+        else
+            hashmap[num] = 1
+        end
+    }
+
+    result = []
+    nums2.each do |num|
+        if hashmap[num] && hashmap[num] > 0
+            result << num
+            hashmap[num] -= 1
+        end
+    end 
+
+    result
+end
+
+# solution 1 refactored map smallest array 
+
+def intersect(nums1, nums2)
+  # Ensure nums1 is the smaller array to minimize space usage.
+  if nums1.length > nums2.length
+    return intersect(nums2, nums1)
+  end
+
+  # Build a frequency map from the smaller array.
+  hashmap = {}
+  nums1.each do |num|
+    hashmap[num] = (hashmap[num] || 0) + 1
+  end
+
+  result = []
+  nums2.each do |num|
+    if hashmap[num] && hashmap[num] > 0
+      result << num
+      hashmap[num] -= 1
+    end
+  end
+
+  result
+end
+
+# 367. Valid Perfect Square
+# Easy
+# Topics
+# Companies
+# Given a positive integer num, return true if num is a perfect square or false otherwise.
+
+# A perfect square is an integer that is the square of an integer. In other words, it is the product of some integer with itself.
+
+# You must not use any built-in library function, such as sqrt.
+
+ 
+
+# Example 1:
+
+# Input: num = 16
+# Output: true
+# Explanation: We return true because 4 * 4 = 16 and 4 is an integer.
+# Example 2:
+
+# Input: num = 14
+# Output: false
+# Explanation: We return false because 3.742 * 3.742 = 14 and 3.742 is not an integer.
+ 
+
+# Constraints:
+
+# 1 <= num <= 231 - 1
+
+# solution 1
+
+def is_perfect_square(num)
+    return true if num == 1
+    low = 1
+    high = num
+
+    while low <= high
+        mid = (low + high) / 2
+        square = mid * mid 
+
+        if square == num
+            return true
+        elsif square > num
+            high = mid - 1
+        else 
+            low = mid + 1
+        end
+    end
+    return false 
+end
 
 # 520. Detect Capital
 # Easy
@@ -5196,67 +5625,6 @@ def can_construct(ransom_note, magazine)
   end
 
   true
-end
-
-# 345. Reverse Vowels of a String
-# Easy
-# Topics
-# Companies
-# Given a string s, reverse only all the vowels in the string and return it.
-
-# The vowels are 'a', 'e', 'i', 'o', and 'u', and they can appear in both lower and upper cases, more than once.
-
-# Example 1:
-
-# Input: s = "hello"
-# Output: "holle"
-# Example 2:
-
-# Input: s = "leetcode"
-# Output: "leotcede"
-
-# Constraints:
-
-# 1 <= s.length <= 3 * 105
-# s consist of printable ASCII characters.
-
-# solution 1
-
-def reverse_vowels(s)
-  vowels = 'aeiou'
-  vwl_ary = []
-  s.chars do |letter|
-    if vowels.include?(letter)
-      vwl_ary.push(letter)
-      s.sub!(letter, '!')
-    end
-  end
-  vwl_ary.reverse.each do |letter|
-    s.sub!('!', letter)
-  end
-  s
-end
-
-# solution 2
-
-def reverse_vowels(s)
-  vowels = 'aeiouAEIOU'
-  left = 0
-  right = s.length - 1
-  s_chars = s.chars
-
-  while left < right
-    left += 1 while left < right && !vowels.include?(s_chars[left])
-    right -= 1 while left < right && !vowels.include?(s_chars[right])
-
-    next unless left < right
-
-    s_chars[left], s_chars[right] = s_chars[right], s_chars[left]
-    left += 1
-    right -= 1
-  end
-
-  s_chars.join
 end
 
 # 461. Hamming Distance
